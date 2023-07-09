@@ -60,6 +60,7 @@ public:
         }
     }
     // this is immutable
+    //okay
     void forEach(std::function<void(const T &)> func) const
     {
         for (const T &element : data)
