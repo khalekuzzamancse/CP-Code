@@ -19,7 +19,7 @@ public:
         data.push_back(value);
     }
 
-//hello
+    // hello
     void popBack()
     {
         if (!data.empty())
@@ -60,7 +60,7 @@ public:
         }
     }
     // this is immutable
-    //okay
+    // okay
     void forEach(std::function<void(const T &)> func) const
     {
         for (const T &element : data)
@@ -76,13 +76,12 @@ public:
         }
     }
 
-    template <typename UnaryOp>
-    Vector<T> map(UnaryOp op) const
+       Vector<T> map(std::function<T(T)> transformFunction) const
     {
         Vector<T> result;
         result.data.resize(data.size());
 
-        std::transform(data.begin(), data.end(), result.data.begin(), op);
+        std::transform(data.begin(), data.end(), result.data.begin(), transformFunction);
 
         return result;
     }
@@ -91,6 +90,10 @@ void printElement(const int &element)
 {
     cout << element << " ";
 }
+int squre(const int &element)
+{
+    return element * element;
+}
 int main()
 {
     Vector<int> v;
@@ -98,21 +101,23 @@ int main()
     v.pushBack(2);
     v.pushBack(3);
 
-    v.forEach([](const int &element) {});
-    v.forEach(printElement);
-    v.forEach([](int &element)
-              { cout << "Hello" << endl; });
+    // v.forEach([](const int &element) {});
+    // v.forEach(printElement);
+    // v.forEach([](int &element)
+    //           { cout << "Hello" << endl; });
 
-    v.forEachIndexed([](size_t index, const int &value)
-                     { std::cout << "Index: " << index << ", Value: " << value << std::endl; });
+    // v.forEachIndexed([](size_t index, const int &value)
+    //                  { std::cout << "Index: " << index << ", Value: " << value << std::endl; });
 
-    auto squaredVector = v
-                             .map([](const int &x)
-                                  { return x * x; })
-                             .map([](const int &x)
-                                  { return x * 2; })
-                             .map([](const int &x)
-                                  { return x * 3; });
+    // auto squaredVector = v
+    //                          .map([](const int &x)
+    //                               { return x * x; })
+    //                          .map([](const int &x)
+    //                               { return x * 2; })
+    //                          .map([](const int &x)
+    //                               { return x * 3; });
+
+    auto squaredVector = v.map(squre);
 
     squaredVector.printDataOnSingleLine(); // Prints: 1 4 9
 
