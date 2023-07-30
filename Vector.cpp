@@ -4,7 +4,6 @@
 #include <functional>
 
 using namespace std;
-
 template <typename T>
 class Vector
 {
@@ -12,78 +11,102 @@ private:
     std::vector<T> data;
 
 public:
-    Vector() {}
-
+    Vector()
+    {
+    }
+    Vector(vector<T> &v)
+    {
+        this->data = v;
+    }
+    Vector(int inputSize)
+    {
+        while (inputSize--)
+        {
+            T x;
+            cin >> x;
+            pushBack(x);
+        }
+    }
+    void set(vector<T> &v)
+    {
+        this->data = v;
+    }
     void pushBack(const T &value)
     {
         data.push_back(value);
     }
 
-    // hello
     void popBack()
     {
         if (!data.empty())
-        {
             data.pop_back();
-        }
     }
 
-    T valueAt(size_t index)
+    T get(size_t index)
     {
         return data[index];
     }
+    T getFirst()
+    {
+        return data[0];
+    }
+    T getLast()
+    {
+        return data[size() - 1];
+    }
 
-    size_t size() const
+    int size()
     {
         return data.size();
     }
 
-    bool empty() const
+    bool isEmpty() const
     {
         return data.empty();
     }
 
-    void printDataOnSingleLine() const
-    {
-        for (size_t i = 0; i < data.size(); i++)
-        {
-            std::cout << data[i] << " ";
-        }
-        std::cout << std::endl;
-    }
     // This is mutable
     void forEach(std::function<void(T &)> func)
     {
         for (T &element : data)
-        {
             func(element);
-        }
     }
-    // this is immutable
-    // okay
-    void forEach(std::function<void(const T &)> func) const
-    {
-        for (const T &element : data)
-        {
-            func(element);
-        }
-    }
+
     void forEachIndexed(std::function<void(size_t, const T &)> func) const
     {
         for (size_t i = 0; i < data.size(); i++)
-        {
             func(i, data[i]);
-        }
     }
 
-       Vector<T> map(std::function<T(T)> transformFunction) const
+    Vector<T> map(std::function<T(T)> transformFunction) const
     {
         Vector<T> result;
         result.data.resize(data.size());
-
         std::transform(data.begin(), data.end(), result.data.begin(), transformFunction);
-
         return result;
+    }
+    Vector<T> filter(std::function<bool(const T &)> predicate) const
+    {
+        Vector<T> result;
+        for (const T &element : data)
+            if (predicate(element))
+                result.pushBack(element);
+        return result;
+    }
+
+    void toString(string separator = " ")
+    {
+        if (isEmpty())
+            return;
+        for (int i = 0; i < size() - 1; i++)
+            cout << data[i] << separator;
+        cout << data[data.size() - 1];
+        cout << endl;
+        return;
+    }
+    void sort()
+    {
+        std::sort(data.begin(), data.end());
     }
 };
 void printElement(const int &element)
@@ -101,6 +124,14 @@ int main()
     v.pushBack(2);
     v.pushBack(3);
 
+    // Vector<int> v2 = Vector<int>(v);
+    // v.toString();
+    // Vector<int> v3 = Vector<int>(3);
+    // v3.toString();
+
+    // cout << v.getFirst() << endl;
+    // cout << v.getLast() << endl;
+
     // v.forEach([](const int &element) {});
     // v.forEach(printElement);
     // v.forEach([](int &element)
@@ -117,9 +148,15 @@ int main()
     //                          .map([](const int &x)
     //                               { return x * 3; });
 
-    auto squaredVector = v.map(squre);
+    // auto squaredVector = v.map(squre);
 
-    squaredVector.printDataOnSingleLine(); // Prints: 1 4 9
+    //  squaredVector.printDataOnSingleLine(); // Prints: 1 4 9
+
+    // Filter example
+    // v.filter([](const int &element){ return element % 2 == 0; })
+    //  .map([](const int &x) { return x * x * x; })
+    //  .toString();
+    // v.toString();
 
     return 0;
 }

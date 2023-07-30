@@ -8,19 +8,7 @@ private:
     set<T> data;
 
 public:
-    Set(const set<T> &data)
-    {
-        this->data = data;
-    }
-
-    Set()
-    {
-    }
-    template <typename U>
-    Set(const U &container)
-    {
-        this->data = set<T>(std::set<typename U::value_type>(container.begin(), container.end()));
-    }
+   
     void insert(T value)
     {
         this->data.insert(value);
@@ -73,6 +61,14 @@ public:
         std::transform(inputSet.begin(), inputSet.end(), std::inserter(newSet, newSet.begin()), transformFunction);
         return Set(newSet);
     }
+    Set<T> filter(std::function<bool(const T &)> predicate) const
+    {
+        Set<T> result;
+        for (const T &element : data)
+            if (predicate(element))
+                result.insert(element);
+        return result;
+    }
 };
 int cube(const int &element)
 {
@@ -102,6 +98,9 @@ int main()
                                         { return x * 2; });
 
     newSet.toString(" ");
+    newSet.filter([](const int &element)
+                  { return element % 4 == 0; })
+        .toString(" ");
 
     return 0;
 }
