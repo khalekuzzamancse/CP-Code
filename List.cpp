@@ -71,12 +71,25 @@ public:
             result.insert(result.end(), transformFunction(element));
         return List(result);
     }
+    // Filter methods
     List<T> filter(std::function<bool(const T &)> predicate) const
     {
         list<T> result;
         for (const T &element : data)
             if (predicate(element))
                 result.insert(result.end(), element);
+        return List(result);
+    }
+    List<T> filterIndexed(std::function<bool(size_t, const T &)> predicate) const
+    {
+        list<T> result;
+        size_t i = 0;
+        for (const T &element : data)
+        {
+            if (predicate(i, element))
+                result.insert(result.end(), element);
+            i++;
+        }
         return List(result);
     }
 
@@ -176,5 +189,10 @@ int main()
 
     // l.filter([](const int &x) -> bool
     //          { return x % 2 == 0; })
+    //     .toString();
+    // l.filterIndexed([](size_t i, const int &x) -> bool
+    //                 { 
+    //                     bool b=i>0&&x%2==0;
+    //                     return b; })
     //     .toString();
 }

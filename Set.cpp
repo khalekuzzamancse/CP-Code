@@ -14,12 +14,7 @@ public:
         this->data.insert(value);
     }
 
-    /*
-    Passing the set as reference so it takes constant time
-    returing the common set as copy(not by reference) because
-    returing local variable refernce is not safe,but if you get
-    time limit then move the commoSet as instance variable
-    */
+ 
     Set<T> commonSet(const Set<T> &set2) const
     {
         std::set<T> commonSet;
@@ -42,12 +37,7 @@ public:
         return data.empty();
     }
 
-    /*
-    Returing a Set so that we can use chaning,but if we do need to return result
-    then this method takes your time unessary so use the next overload method
-    if you do not need to return value immedialy then use the constructor
-
-    */
+  
     template <typename U>
     Set<T> toSet(const U &container)
     {
