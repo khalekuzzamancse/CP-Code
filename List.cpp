@@ -10,7 +10,7 @@ private:
     std::list<T> data;
 
 public:
-    // constructor
+    // constructors
     List()
     {
     }
@@ -20,6 +20,7 @@ public:
     }
     List(int inputSize)
     {
+
         while (inputSize--)
         {
             T x;
@@ -46,15 +47,38 @@ public:
         this->data.insert(it, value);
     }
 
-    // ForEachIndexed
-    //  This is mutable
-    void forEach(std::function<void(T &)> func)
+    // removing elements
+    void removeFirst()
     {
-        for (T &element : data)
-            func(element);
+        if (isNotEmpty())
+            this->data.pop_front();
     }
+    void removeLast()
+    {
+        if (isNotEmpty())
+            this->data.pop_back();
+    }
+    void removeAt(size_t position)
+    {
 
-    void forEachIndexed(std::function<void(size_t, const T &)> func) const
+        if (position < 0 || position >= this->size())
+            return;
+        auto it = this->data.begin();
+        advance(it, position);
+        this->data.erase(it);
+    }
+    void remove(const T &value)
+    {
+        this->data.remove(value);
+    }
+    void removeIf(std::function<bool(const T &)> predicate)
+    {
+        this->data.remove_if(predicate);
+    }
+    //////////////////////////
+    // ForEachIndexed
+
+    void forEach(std::function<void(size_t, const T &)> func) const
     {
         size_t i = 0;
         for (auto it = data.begin(); it != data.end(); ++it)
@@ -70,17 +94,9 @@ public:
         for (const T &element : data)
             result.insert(result.end(), transformFunction(element));
         return List(result);
-    }
+    } 
     // Filter methods
-    List<T> filter(std::function<bool(const T &)> predicate) const
-    {
-        list<T> result;
-        for (const T &element : data)
-            if (predicate(element))
-                result.insert(result.end(), element);
-        return List(result);
-    }
-    List<T> filterIndexed(std::function<bool(size_t, const T &)> predicate) const
+    List<T> filter(std::function<bool(size_t, const T &)> predicate) const
     {
         list<T> result;
         size_t i = 0;
@@ -96,11 +112,11 @@ public:
     //
     bool isEmpty() const
     {
-        return data.empty();
+        return this->data.empty();
     }
     bool isNotEmpty() const
     {
-        return !data.empty();
+        return !isEmpty();
     }
     T get(size_t index)
     {
@@ -114,16 +130,7 @@ public:
     {
         return this->data.back();
     }
-    void removeFirst()
-    {
-        if (isNotEmpty())
-            this->data.pop_front();
-    }
-    void removeLast()
-    {
-        if (isNotEmpty())
-            this->data.pop_back();
-    }
+
     int size()
     {
         return this->data.size();
@@ -164,10 +171,10 @@ int main()
     //  l.toString();
     //  l.sort([](const int &a, const int &b) -> bool
     //         { return a > b; });
-    // l.forEach([](const char &ch)
-    //           { cout << ch << " "; });
-    // l.forEachIndexed([](size_t i, const char &ch)
-    //                  { cout << i << ":" << ch << endl; });
+    // l.forEach([](size_t i, const int &x)
+    //           { cout << x << " "; });
+    // l.forEach([](size_t i, const int &x)
+    //                  { cout << i << ":" << x << endl; });
 
     //  l.toString();
 
@@ -182,16 +189,16 @@ int main()
     // l.removeLast();
     // cout << l.size() << endl;
     // l.toString();
-    // map filleter
+    // // map filleter
     // l.map([](int x) -> int
     //       { return x * x; })
     //     .toString();
 
-    // l.filter([](const int &x) -> bool
+    // l.filter([](size_t index, const int &x) -> bool
     //          { return x % 2 == 0; })
     //     .toString();
-    // l.filterIndexed([](size_t i, const int &x) -> bool
-    //                 { 
+    // l.filter([](size_t i, const int &x) -> bool
+    //                 {
     //                     bool b=i>0&&x%2==0;
     //                     return b; })
     //     .toString();
