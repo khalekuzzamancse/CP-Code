@@ -75,6 +75,58 @@ public:
     {
         this->data.remove_if(predicate);
     }
+
+    // Diffiererent finding methods
+    int find(const T &value)
+    {
+        auto it = std::find(this->data.begin(), this->data.end(), value);
+        int pos = -1;
+        bool isFound = it != this->data.end();
+        if (isFound)
+            pos = std::distance(this->data.begin(), it);
+        return pos;
+    }
+    int find(std::function<bool(const T &)> predicate)
+    {
+        auto it = std::find_if(this->data.begin(), this->data.end(), predicate);
+        int pos = -1;
+        bool isFound = it != this->data.end();
+        if (isFound)
+            pos = std::distance(this->data.begin(), it);
+        return pos;
+    }
+    bool doesExits(const T &value)
+    {
+        bool isFound = find(value) != -1;
+        return isFound;
+    }
+    bool doesNotExits(const T &value)
+    {
+        bool isFound = find(value) != -1;
+        return !isFound;
+    }
+
+    int count(const T &value)
+    {
+        return ::count(this->data.begin(), this->data.end(), value);
+    }
+    int count(std::function<bool(const T &)> predicate)
+    {
+        return ::count_if(this->data.begin(), this->data.end(), predicate);
+    }
+    // Minimum and maximum values
+    pair<T, int> min()
+    {
+        auto it = std::min_element(this->data.begin(), this->data.end());
+        int pos = std::distance(this->data.begin(), it);
+        return make_pair(*it, pos);
+    }
+    pair<T, int> max()
+    {
+        auto it = std::max_element(this->data.begin(), this->data.end());
+        int pos = std::distance(this->data.begin(), it);
+        return make_pair(*it, pos);
+    }
     //////////////////////////
     // ForEachIndexed
 
@@ -94,7 +146,8 @@ public:
         for (const T &element : data)
             result.insert(result.end(), transformFunction(element));
         return List(result);
-    } 
+    }
+
     // Filter methods
     List<T> filter(std::function<bool(size_t, const T &)> predicate) const
     {
@@ -109,7 +162,7 @@ public:
         return List(result);
     }
 
-    //
+    // Empty or Not
     bool isEmpty() const
     {
         return this->data.empty();
@@ -118,9 +171,18 @@ public:
     {
         return !isEmpty();
     }
-    T get(size_t index)
+
+    // getter methods
+    T get(size_t pos) const
     {
-        return data[index];
+
+        if (pos < 0 || pos >= this->data.size())
+        {
+            throw std::out_of_range("Invalid position");
+        }
+        auto it = this->data.begin();
+        std::advance(it, pos);
+        return *it;
     }
     T getFirst()
     {
@@ -135,6 +197,7 @@ public:
     {
         return this->data.size();
     }
+    // toString method
     void toString(const std::string &separator = " ")
     {
         if (data.empty())
@@ -202,4 +265,16 @@ int main()
     //                     bool b=i>0&&x%2==0;
     //                     return b; })
     //     .toString();
+
+    // cout << l.find(3) << endl;
+    // cout << l.find([](int x)
+    //                { return x % 3 == 0; });
+    // cout << l.doesExits(-3) << endl;
+    // cout << l.count(2) << endl;
+    // cout << l.count([](int x)
+    //                 { return x % 2 == 0; })
+    //      << endl;
+    // cout << l.min().first << " " << l.min().second << endl;
+    //  cout << l.max().first << " " << l.max().second << endl;
+    // cout<<l.get(3)<<endl;
 }
