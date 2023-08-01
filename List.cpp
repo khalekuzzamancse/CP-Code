@@ -108,15 +108,7 @@ public:
         return !doesExits(value);
     }
 
-    // int count(const T &value)
-    // {
-    //     return ::count(this->data.begin(), this->data.end(), value);
-    // }
-
-    // int countIf(std::function<bool(const T &)> predicate)
-    // {
-    //     return ::count_if(this->data.begin(), this->data.end(), predicate);
-    // }
+  
     int count(const T &value, int start = 0, int end = -1)
     {
         if (end == -1)
