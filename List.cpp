@@ -8,6 +8,10 @@ class List
 {
 private:
     std::list<T> data;
+    bool isOutOfBound(int position)
+    {
+        return position < 0 || position > getLastIndex();
+    }
 
 public:
     // constructors
@@ -39,8 +43,7 @@ public:
     }
     void insertAt(T value, size_t position)
     {
-        bool isOutOfBound = position < 0 || position > this->size();
-        if (isOutOfBound)
+        if (isOutOfBound(position))
             return;
         auto it = this->data.begin();
         advance(it, position);
@@ -60,8 +63,7 @@ public:
     }
     void removeAt(size_t position)
     {
-
-        if (position < 0 || position >= this->size())
+        if (isOutOfBound())
             return;
         auto it = this->data.begin();
         advance(it, position);
@@ -86,7 +88,7 @@ public:
             pos = std::distance(this->data.begin(), it);
         return pos;
     }
-    int find(std::function<bool(const T &)> predicate)
+    int findIf(std::function<bool(const T &)> predicate)
     {
         auto it = std::find_if(this->data.begin(), this->data.end(), predicate);
         int pos = -1;
@@ -102,31 +104,77 @@ public:
     }
     bool doesNotExits(const T &value)
     {
-        bool isFound = find(value) != -1;
-        return !isFound;
+
+        return !doesExits(value);
     }
 
-    int count(const T &value)
+    // int count(const T &value)
+    // {
+    //     return ::count(this->data.begin(), this->data.end(), value);
+    // }
+
+    // int countIf(std::function<bool(const T &)> predicate)
+    // {
+    //     return ::count_if(this->data.begin(), this->data.end(), predicate);
+    // }
+    int count(const T &value, int start = 0, int end = -1)
     {
-        return ::count(this->data.begin(), this->data.end(), value);
+        if (end == -1)
+            end = getLastIndex();
+        if (isOutOfBound(start) || isOutOfBound(end) || start > end)
+            throw std::out_of_range("Invalid range");
+        auto it_start = this->data.begin();
+        auto it_end = this->data.begin();
+        std::advance(it_start, start);
+        std::advance(it_end, end + 1);
+        return ::count(it_start, it_end, value);
     }
-    int count(std::function<bool(const T &)> predicate)
+    int countIf(std::function<bool(const T &)> predicate, int start = 0, int end = -1)
     {
-        return ::count_if(this->data.begin(), this->data.end(), predicate);
+        if (end == -1)
+            end = getLastIndex();
+        if (isOutOfBound(start) || isOutOfBound(end) || start > end)
+            throw std::out_of_range("Invalid range");
+        auto it_start = this->data.begin();
+        auto it_end = this->data.begin();
+        std::advance(it_start, start);
+        std::advance(it_end, end + 1);
+        return ::count_if(it_start, it_end, predicate);
     }
+
     // Minimum and maximum values
-    pair<T, int> min()
+    // These methods have default paramter implementations
+
+    pair<T, int> max(int start = 0, int end = -1)
     {
-        auto it = std::min_element(this->data.begin(), this->data.end());
-        int pos = std::distance(this->data.begin(), it);
-        return make_pair(*it, pos);
+        if (end == -1)
+            end = getLastIndex();
+        if (isOutOfBound(start) || isOutOfBound(end) || start > end)
+            throw std::out_of_range("Invalid range");
+        auto it_start = this->data.begin();
+        auto it_end = this->data.begin();
+        std::advance(it_start, start);
+        std::advance(it_end, end + 1);
+        auto it_max = std::max_element(it_start, it_end);
+        int pos = std::distance(this->data.begin(), it_max);
+        return make_pair(*it_max, pos);
     }
-    pair<T, int> max()
+
+    pair<T, int> min(int start = 0, int end = -1)
     {
-        auto it = std::max_element(this->data.begin(), this->data.end());
-        int pos = std::distance(this->data.begin(), it);
-        return make_pair(*it, pos);
+        if (end == -1)
+            end = getLastIndex();
+        if (isOutOfBound(start) || isOutOfBound(end) || start > end)
+            throw std::out_of_range("Invalid range");
+        auto it_start = this->data.begin();
+        auto it_end = this->data.begin();
+        std::advance(it_start, start);
+        std::advance(it_end, end + 1);
+        auto it_min = std::min_element(it_start, it_end);
+        int pos = std::distance(this->data.begin(), it_min);
+        return make_pair(*it_min, pos);
     }
+
     //////////////////////////
     // ForEachIndexed
 
@@ -171,17 +219,18 @@ public:
     {
         return !isEmpty();
     }
+    size_t getLastIndex()
+    {
+        return this->data.size() - 1;
+    }
 
     // getter methods
-    T get(size_t pos) const
+    T get(size_t position)
     {
-
-        if (pos < 0 || pos >= this->data.size())
-        {
-            throw std::out_of_range("Invalid position");
-        }
+        if (isOutOfBound(position))
+            throw std::out_of_range("Invalid range");
         auto it = this->data.begin();
-        std::advance(it, pos);
+        std::advance(it, position);
         return *it;
     }
     T getFirst()
@@ -208,32 +257,41 @@ public:
     }
     // sorting
     // sorting comparator
-    void sort()
-    {
-        this->data.sort();
-    }
-
-    void sort(std::function<bool(const T &, const T &)> comparator)
+    // Sort only a range using stl is not possible
+    // because list has no random access on it elements
+    void sort(std::function<bool(const T &, const T &)> comparator = [](const T &a, const T &b)
+              { return a < b; })
     {
         this->data.sort(comparator);
     }
+
     //
-    void reverse()
+    void reverse(int start = 0, int end = -1)
     {
-        this->data.reverse();
+        if (end == -1)
+            end = getLastIndex();
+        if (isOutOfBound(start) || isOutOfBound(end) || start > end)
+            throw std::out_of_range("Invalid range");
+        auto it_start = this->data.begin();
+        auto it_end = this->data.begin();
+        std::advance(it_start, start);
+        std::advance(it_end, end + 1);
+        std::reverse(it_start, it_end);
     }
 };
 
 int main()
 {
     List<int> l = List<int>(5);
-    l.toString();
-    // l.insertAt(3, 2);
+    // l.toString();
+    // l.insertAt(10, 2);
     // l.toString();
     //  l.sort();
     //  l.toString();
-    //  l.sort([](const int &a, const int &b) -> bool
-    //         { return a > b; });
+    // l.sort([](const int &a, const int &b) -> bool
+    //        { return a > b; });
+    // l.toString();
+
     // l.forEach([](size_t i, const int &x)
     //           { cout << x << " "; });
     // l.forEach([](size_t i, const int &x)
@@ -267,14 +325,25 @@ int main()
     //     .toString();
 
     // cout << l.find(3) << endl;
-    // cout << l.find([](int x)
-    //                { return x % 3 == 0; });
-    // cout << l.doesExits(-3) << endl;
+    //  cout << l.findIf([](int x)
+    //                 { return x % 3 == 0; });
+    // cout << l.doesExits(3) << endl;
     // cout << l.count(2) << endl;
-    // cout << l.count([](int x)
-    //                 { return x % 2 == 0; })
+    // cout << l.count(2, 2, 4) << endl;
+    // cout << l.countIf([](int x)
+    //                   { return x % 2 == 1; })
     //      << endl;
-    // cout << l.min().first << " " << l.min().second << endl;
-    //  cout << l.max().first << " " << l.max().second << endl;
-    // cout<<l.get(3)<<endl;
+    // cout << l.countIf([](int x)
+    //                   { return x % 2 == 0; },
+    //                   0, 2)
+    //      << endl;
+
+    // cout << l.get(3) << endl;
+    //  cout << l.max().first << " " << l.max().second;
+    // cout << l.min(0, 4).first << " " << l.min(0, 4).second << endl;
+    //  cout << l.max(1, 2).first << " " << endl;
+    // l.reverse();
+    // l.toString();
+    // l.reverse(3, 4);
+    // l.toString();
 }
