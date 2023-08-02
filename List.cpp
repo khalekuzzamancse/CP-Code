@@ -12,6 +12,20 @@ private:
     {
         return position < 0 || position > getLastIndex();
     }
+    std::pair<typename std::vector<T>::iterator,
+              typename std::vector<T>::iterator>
+    getRange(int start, int end)
+    {
+        if (end == -1)
+            end = getLastIndex();
+        if (isOutOfBound(start) || isOutOfBound(end) || start > end)
+            throw std::out_of_range("Invalid range");
+        auto it_start = this->data.begin();
+        auto it_end = this->data.begin();
+        std::advance(it_start, start);
+        std::advance(it_end, end + 1);
+        return std::make_pair(it_start, it_end);
+    }
 
 public:
     // constructors
@@ -108,7 +122,6 @@ public:
         return !doesExits(value);
     }
 
-  
     int count(const T &value, int start = 0, int end = -1)
     {
         if (end == -1)

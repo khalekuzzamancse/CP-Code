@@ -101,9 +101,9 @@ public:
         auto range = getRange(start, end);
         auto it = std::find(range.first, range.second, value);
         int pos = -1;
-        bool isFound = it != this->data.end();
+        bool isFound = it != range.second;
         if (isFound)
-            pos = std::distance(this->data.begin(), it);
+            pos = std::distance(range.first, it) + start;
         return pos;
     }
     int findIf(std::function<bool(const T &)> predicate, int start = 0, int end = -1)
@@ -111,9 +111,9 @@ public:
         auto range = getRange(start, end);
         auto it = std::find_if(range.first, range.second, predicate);
         int pos = -1;
-        bool isFound = it != this->data.end();
+        bool isFound = it != range.second;
         if (isFound)
-            pos = std::distance(this->data.begin(), it);
+            pos = std::distance(range.first, it) + start;
         return pos;
     }
 
