@@ -106,6 +106,18 @@ public:
             pos = std::distance(range.first, it) + start;
         return pos;
     }
+    int findReseverse(const char &value, int start = 0, int end = -1)
+    {
+        std::pair<typename std::string::iterator,
+                  typename std::string::iterator>
+            range = getRange(start, end);
+        auto it = std::find(std::make_reverse_iterator(range.second), std::make_reverse_iterator(range.first), value);
+        int pos = -1;
+        bool isFound = it != std::make_reverse_iterator(range.first);
+        if (isFound)
+            pos = std::distance(range.first, it.base()) - 1 + start;
+        return pos;
+    }
 
     int findIf(std::function<bool(const char &)> predicate, int start = 0, int end = -1)
     {
@@ -115,6 +127,18 @@ public:
         bool isFound = it != range.second;
         if (isFound)
             pos = std::distance(range.first, it) + start;
+        return pos;
+    }
+    int findIfReseverse(std::function<bool(const char &)> predicate, int start = 0, int end = -1)
+    {
+        std::pair<typename std::string::iterator,
+                  typename std::string::iterator>
+            range = getRange(start, end);
+        auto it = std::find_if(std::make_reverse_iterator(range.second), std::make_reverse_iterator(range.first), predicate);
+        int pos = -1;
+        bool isFound = it != std::make_reverse_iterator(range.first);
+        if (isFound)
+            pos = std::distance(range.first, it.base()) - 1 + start;
         return pos;
     }
 
@@ -297,12 +321,20 @@ int main()
     // s.removeLast();
     // s.toString();
     // cout << s.find('c') << endl;
+    //  cout << s.findReseverse('a') << endl;
     // cout << s.find('c', 2, 3) << endl;
+    // cout << s.findReseverse('a', 2, 5) << endl;
+
     // cout << s.findIf([](char c)
     //                  { return c == 'c'; });
+    // cout << s.findIfReseverse([](char c)
+    //                           { return c == 'a'; });
     // cout << s.findIf([](char c)
     //                  { return c == 'c'; },
     //                  0,3);
+    // cout << s.findIfReseverse([](char c)
+    //                           { return c == 'a'; },
+    //                           0, 1);
 
     // cout << s.count('a') << endl;
     //  cout << s.countIf([](char c)
