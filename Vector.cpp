@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
+#include <unordered_set>
 
 using namespace std;
 template <typename T>
@@ -94,6 +95,17 @@ public:
     {
         auto range = getRange(start, end);
         this->data.erase(std::remove_if(range.first, range.second, predicate), range.second);
+    }
+    void removeDuplicate(int start = 0, int end = -1)
+    {
+        // Complexity: O(N)
+        auto range = getRange(start, end);
+        std::unordered_set<T> s;
+        auto is_duplicate = [&s](T x)
+        {
+            return !s.insert(x).second;
+        };
+        this->data.erase(std::remove_if(range.first, range.second, is_duplicate), range.second);
     }
     // Diffiererent finding methods
     int find(const T &value, int start = 0, int end = -1)
@@ -319,6 +331,9 @@ int main()
     // v.removeIf([](int x)
     //            { return x % 2 == 0; },
     //            0, 2);
+
+    // v.removeDuplicate(1,5);
+    // v.toString();
 
     // Vector<int> v2 = Vector<int>(v);
     // v.toString();

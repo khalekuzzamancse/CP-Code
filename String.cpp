@@ -1,8 +1,4 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
-#include <functional>
+#include <bits/stdc++.h>
 using namespace std;
 class String
 {
@@ -89,37 +85,53 @@ public:
         auto range = getRange(start, end);
         this->data.erase(std::remove(range.first, range.second, value), range.second);
     }
+    void remove(int start = 0, int end = -1)
+    {
+        auto range = getRange(start, end);
+        this->data.erase(range.first, range.second);
+    }
+    void removeUntil(int start = 0, int end = -1)
+    {
+        auto range = getRange(start, end);
+        this->data.erase(range.first, range.second);
+    }
     void removeIf(std::function<bool(const char &)> predicate, int start = 0, int end = -1)
     {
         auto range = getRange(start, end);
         this->data.erase(std::remove_if(range.first, range.second, predicate), range.second);
     }
+    String &removeDuplicate(int start = 0, int end = -1)
+    {
+        // Complexity: O(N)
+        auto range = getRange(start, end);
+        std::unordered_set<char> s;
+        auto is_duplicate = [&s](char x)
+        {
+            return !s.insert(x).second;
+        };
+        this->data.erase(std::remove_if(range.first, range.second, is_duplicate), range.second);
+        return *this;
+    }
+
+    String &removeConsecutiveDuplicate(int start = 0, int end = -1)
+    {
+        // Complexity: O(N)
+        auto range = getRange(start, end);
+        String result;
+        for (auto it = range.first; it != range.second; ++it)
+        {
+            if (result.isEmpty() || result.data.back() != *it)
+            {
+                result.pushBack(*it);
+            }
+        }
+        this->data = std::move(result.data);
+        return *this;
+    }
 
     // Diffiererent finding methods
-    int find(const char &value, int start = 0, int end = -1)
-    {
-        auto range = getRange(start, end);
-        auto it = std::find(range.first, range.second, value);
-        int pos = -1;
-        bool isFound = it != range.second;
-        if (isFound)
-            pos = std::distance(range.first, it) + start;
-        return pos;
-    }
-    int findReseverse(const char &value, int start = 0, int end = -1)
-    {
-        std::pair<typename std::string::iterator,
-                  typename std::string::iterator>
-            range = getRange(start, end);
-        auto it = std::find(std::make_reverse_iterator(range.second), std::make_reverse_iterator(range.first), value);
-        int pos = -1;
-        bool isFound = it != std::make_reverse_iterator(range.first);
-        if (isFound)
-            pos = std::distance(range.first, it.base()) - 1 + start;
-        return pos;
-    }
 
-    int findIf(std::function<bool(const char &)> predicate, int start = 0, int end = -1)
+    int find(std::function<bool(const char &)> predicate, int start = 0, int end = -1)
     {
         auto range = getRange(start, end);
         auto it = std::find_if(range.first, range.second, predicate);
@@ -129,7 +141,7 @@ public:
             pos = std::distance(range.first, it) + start;
         return pos;
     }
-    int findIfReseverse(std::function<bool(const char &)> predicate, int start = 0, int end = -1)
+    int findReseverse(std::function<bool(const char &)> predicate, int start = 0, int end = -1)
     {
         std::pair<typename std::string::iterator,
                   typename std::string::iterator>
@@ -144,7 +156,8 @@ public:
 
     bool doesExits(const char &value)
     {
-        bool isFound = find(value) != -1;
+        bool isFound = find([&value](char ch)
+                            { return ch == value; }) != -1;
         return isFound;
     }
     bool doesNotExits(const char &value)
@@ -208,13 +221,20 @@ public:
             i++;
         }
     }
-    //
-    String map(std::function<char(char)> transformFunction) const
+    // Modifityng elemnts
+    // String map(std::function<char(char)> transformFunction) const
+    // {
+    //     string result;
+    //     for (const char &element : data)
+    //         result.insert(result.end(), transformFunction(element));
+    //     return String(result);
+    // }
+
+    String &map(std::function<char(char)> transformFunction, int start = 0, int end = -1)
     {
-        string result;
-        for (const char &element : data)
-            result.insert(result.end(), transformFunction(element));
-        return String(result);
+        auto range = getRange(start, end);
+        std::transform(range.first, range.second, range.first, transformFunction);
+        return *this;
     }
 
     // Filter methods
@@ -276,12 +296,21 @@ public:
     {
         return size() - 1;
     }
-
-    char get(int position)
+    //
+    bool isEqual(string &value)
+    {
+        return this->data == value;
+    }
+    char getAt(int position)
     {
         if (isOutOfBound(position))
             throw std::out_of_range("Invalid index");
         return this->data.at(position);
+    }
+    string get()
+    {
+
+        return this->data;
     }
     char getFirst()
     {
@@ -310,7 +339,7 @@ public:
 
 int main()
 {
-    string str = "abacde";
+    string str = "abaaacde";
     String s = String(str);
     s.toString();
     // s.pushBack('1');
@@ -320,10 +349,12 @@ int main()
     // s.removeFirst();
     // s.removeLast();
     // s.toString();
-    // cout << s.find('c') << endl;
-    //  cout << s.findReseverse('a') << endl;
-    // cout << s.find('c', 2, 3) << endl;
-    // cout << s.findReseverse('a', 2, 5) << endl;
+    // s.removeIf([](char c)
+    //            { return c != 'a'; });
+    // s.toString();
+    //     .removeDuplicate()
+    //     .toString();
+    s.removeConsecutiveDuplicate().toString();
 
     // cout << s.findIf([](char c)
     //                  { return c == 'c'; });
@@ -352,6 +383,12 @@ int main()
     // s.map([](const char ch)
     //       { return ch - 32; })
     //     .toString();
+    // string x = "abacd";
+    //  cout << s.isEqual(x);
+
+    // s.map([](char c)
+    //       { return std::toupper(c); })
+
     // cout << s.min(0, 2).first << s.min(0, 2).second << endl;
     // s.filter([](size_t index, const char &ch)
     //          { return (ch == 'a' && index % 2 == 0); })
