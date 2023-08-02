@@ -158,11 +158,9 @@ public:
         return make_pair(*it_min, pos);
     }
     // ForEachIndexed
-
-    void forEach(std::function<void(size_t, const T &)> func, int start = 0, int end = -1) const
+    void forEach(std::function<void(size_t, const T &)> func, int start = 0, int end = -1)
     {
         auto range = getRange(start, end);
-
         size_t i = 0;
         for (auto it = range.first; it != range.second; ++it)
         {
@@ -170,6 +168,18 @@ public:
             i++;
         }
     }
+    void forEachReverse(std::function<void(size_t, const T &)> func, int end = -1, int start = 0)
+    {
+        auto range = getRange(start, end);
+        size_t i = 0;
+        // use reverse_iterator to wrap the normal iterators
+        for (auto it = std::reverse_iterator(range.second); it != std::reverse_iterator(range.first); ++it)
+        {
+            func(i, *it);
+            i++;
+        }
+    }
+
     // map
     Vector<T> map(std::function<T(T)> transformFunction) const
     {
@@ -180,7 +190,7 @@ public:
     }
 
     // Filter methods
-    Vector<T> filter(std::function<bool(size_t, const T &)> predicate, int start = 0, int end = -1) const
+    Vector<T> filter(std::function<bool(size_t, const T &)> predicate, int start = 0, int end = -1)
     {
         auto range = getRange(start, end);
         vector<T> result;
@@ -210,11 +220,7 @@ public:
         return !isEmpty();
     }
 
-    void set(vector<T> &v)
-    {
-        this->data = v;
-    }
-
+    // Getters
     T get(size_t position)
     {
         if (isOutOfBound(position))
@@ -233,15 +239,6 @@ public:
     int size()
     {
         return data.size();
-    }
-
-    Vector<T> filter(std::function<bool(const T &)> predicate) const
-    {
-        Vector<T> result;
-        for (const T &element : data)
-            if (predicate(element))
-                result.pushBack(element);
-        return result;
     }
 
     void toString(string separator = " ")
@@ -291,13 +288,12 @@ int main()
     // v.removeLast();
     // v.removeAt(2);
     // v.remove(10);
-    // v.remove(10,0,3);
-    // v.removeIf([](int x)
+    //  v.remove(10, 0, 3);
+    //  v.removeIf([](int x)
     //            { return x % 2 == 0; });
     // v.removeIf([](int x)
-    //        { return x % 2 == 0; },0,2);
-
-    v.toString();
+    //            { return x % 2 == 0; },
+    //            0, 2);
 
     // Vector<int> v2 = Vector<int>(v);
     // v.toString();
@@ -307,31 +303,31 @@ int main()
     // cout << v.getFirst() << endl;
     // cout << v.getLast() << endl;
 
-    // v.forEach([](const int &element) {});
-    // v.forEach(printElement);
-    // v.forEach([](int &element)
-    //           { cout << "Hello" << endl; });
+    // v.forEach([](size_t index, const int &value)
+    //           { std::cout << "Index: " << index << "Value: "
+    //                       << value << std::endl; });
+    //   v.forEachReverse([](size_t index, const int &value)
+    //           { std::cout << "Index: " << index << "Value: "
+    //                       << value << std::endl; });
 
-    // v.forEachIndexed([](size_t index, const int &value)
-    //                  { std::cout << "Index: " << index << ", Value: " << value << std::endl; });
-
-    // auto squaredVector = v
-    //                          .map([](const int &x)
-    //                               { return x * x; })
-    //                          .map([](const int &x)
-    //                               { return x * 2; })
-    //                          .map([](const int &x)
-    //                               { return x * 3; });
+    // v.map([](const int &x)
+    //       { return x * x; })
+    //     .map([](const int &x)
+    //          { return x * 2; })
+    //     .map([](const int &x)
+    //          { return x * 3; }).toString();
 
     // auto squaredVector = v.map(squre);
 
-    //  squaredVector.printDataOnSingleLine(); // Prints: 1 4 9
-
     // Filter example
-    // v.filter([](const int &element){ return element % 2 == 0; })
-    //  .map([](const int &x) { return x * x * x; })
-    //  .toString();
-    // v.toString();
+    // v.filter([](size_t index, const int &x) -> bool
+    //          { return x % 2 == 0; })
+    //     .toString();
+    // v.filter([](size_t i, const int &x)
+    //          {
+    //                     bool b=i>0&&x%2==0;
+    //                     return b; })
+    //     .toString();
 
     return 0;
 }
