@@ -63,7 +63,7 @@ public:
     }
     void removeAt(size_t position)
     {
-        if (isOutOfBound())
+        if (isOutOfBound(position))
             return;
         auto it = this->data.begin();
         advance(it, position);
