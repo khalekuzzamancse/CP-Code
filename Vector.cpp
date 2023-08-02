@@ -204,6 +204,7 @@ public:
         }
         return Vector(result);
     }
+    //
 
     size_t getLastIndex()
     {

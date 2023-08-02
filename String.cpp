@@ -163,6 +163,51 @@ public:
         return std::make_pair(value, pos);
     }
     //
+    void forEach(std::function<void(size_t, const char &)> func, int start = 0, int end = -1)
+    {
+        auto range = getRange(start, end);
+        size_t i = 0;
+        for (auto it = range.first; it != range.second; ++it)
+        {
+            func(i, *it);
+            i++;
+        }
+    }
+    void forEachReverse(std::function<void(size_t, const char &)> func, int end = -1, int start = 0)
+    {
+        auto range = getRange(start, end);
+        size_t i = 0;
+        // use reverse_iterator to wrap the normal iterators
+        for (auto it = std::reverse_iterator(range.second); it != std::reverse_iterator(range.first); ++it)
+        {
+            func(i, *it);
+            i++;
+        }
+    }
+    //
+    String map(std::function<char(char)> transformFunction) const
+    {
+        string result;
+        for (const char &element : data)
+            result.insert(result.end(), transformFunction(element));
+        return String(result);
+    }
+
+    // Filter methods
+    String filter(std::function<bool(size_t, const char &)> predicate, int start = 0, int end = -1)
+    {
+        auto range = getRange(start, end);
+        string result;
+
+        size_t i = 0;
+        for (auto it = range.first; it != range.second; ++it)
+        {
+            if (predicate(i, *it))
+                result.insert(result.end(), *it);
+            i++;
+        }
+        return String(result);
+    }
     //
 
     // Sorting
@@ -267,18 +312,25 @@ int main()
     //                   0,2);
     // cout << s.max(0, 2).first << s.max(0, 2).second << endl;
     // cout << s.max().first << s.max().second << endl;
+    // s.forEach([](size_t i, char c)
+    //           { cout << i << c << endl; });
+    // s.forEachReverse([](size_t i, char c)
+    //           { cout << i << c << endl; });
 
-    // str.filter([](const char &ch)
-    //            { return (ch == 'a') || (ch == 'e'); })
+    // s.map([](const char ch)
+    //       { return ch - 32; })
+    //     .toString();
+    // cout << s.min(0, 2).first << s.min(0, 2).second << endl;
+    // s.filter([](size_t index, const char &ch)
+    //          { return (ch == 'a' && index % 2 == 0); })
     //     .toString(",");
-
-    // str.filterIndexed([](const char &ch, size_t index)
-    //                   { return (ch == 'a' && index % 2 == 0); })
-    //     .toString(",");
-    // str.filterIndexed([](const char &ch, size_t index)
-    //                   { return (index % 2 == 0); })
+    // s.filter([](size_t index, const char &ch)
+    //          { return (index % 2 == 0); })
     //     .toString("");
-    // cout << str.getFirst() << str.getLast() << endl;
+    // s.sort();
+    // s.toString();
+    // s.reverse();
+    // s.toString();
 
     return 0;
 }
