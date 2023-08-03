@@ -22,6 +22,46 @@ private:
         std::advance(it_end, end + 1);
         return std::make_pair(it_start, it_end);
     }
+    vector<int> computeLPS(string pattern)
+    {
+        int m = pattern.length(), i = 1, j = 0;
+        vector<int> lps(m);
+        lps[0] = 0;
+        while (i < m)
+        {
+            if (pattern[i] == pattern[j])
+                j++, lps[i] = j, i++;
+            else
+            {
+                if (j > 0)
+                    j = lps[j - 1];
+                else
+                    lps[i] = 0, i++;
+            }
+        }
+        return move(lps);
+    }
+    bool kmp(string pattern)
+    {
+        int m = pattern.length(), n = this->data.length();
+        vector<int> lps = computeLPS(pattern);
+        int i = 0, j = 0;
+        while (i < n)
+        {
+            if (pattern[j] == this->data[i])
+                i++, j++;
+            if (j == m)
+                return true;
+            else if (i < n && pattern[j] != this->data[i])
+            {
+                if (j > 0)
+                    j = lps[j - 1];
+                else
+                    i++;
+            }
+        }
+        return false;
+    }
 
 public:
     // Constructors
@@ -323,6 +363,11 @@ public:
         if (isEmpty())
             throw std::out_of_range("Empty string");
         return this->data.back();
+    }
+    // query
+    bool isSubstring(string pattern)
+    {
+        return this->kmp(pattern);
     }
 
     void toString(string separator = "")
