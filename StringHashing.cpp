@@ -5,14 +5,10 @@ class StringHash
 {
 
 private:
-    int mod = 1e9 + 7;
-    vector<int> power;
+    int mod = 1e9 + 7, base = 29, length;
     string text;
-    int length;
-    vector<int> powerUnderModulo;
-    vector<int> powerInverseUnderModulo;
-    vector<int> prefixHash;
-    int base;
+    vector<int> powerUnderModulo, powerInverseUnderModulo, prefixHash;
+
     int moduloAddition(int a, int b)
     {
 
@@ -44,7 +40,7 @@ private:
         return result;
     }
 
-    void calculatePower(int base)
+    void calculatePower()
     {
         // Complexity: O(n)
         powerUnderModulo.resize(length);
@@ -71,9 +67,20 @@ private:
     }
 
 public:
+    StringHash(string text, int base = 32, int mod = 1e9 + 7)
+    {
+        this->text = text;
+        this->length = text.length();
+        this->base = base;
+        this->mod = mod;
+        //
+        calculateHash();
+        calculatePower();
+        calculateHash();
+    }
     int getHash(int l, int r)
     {
-        //O(n)
+        // O(n)
         int result = moduloAddition(prefixHash[r], (l == 0) ? 0 : -prefixHash[l - 1]);
         result = moduloMultiplication(result, powerInverseUnderModulo[l]);
         return result;
