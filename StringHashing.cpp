@@ -85,6 +85,10 @@ public:
         result = moduloMultiplication(result, powerInverseUnderModulo[l]);
         return result;
     }
+    int getHash()
+    {
+        return prefixHash[length - 1];
+    }
 };
 
 int main()
