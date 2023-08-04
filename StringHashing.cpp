@@ -1,50 +1,87 @@
 #include <bits/stdc++.h>
 using namespace std;
+
 class StringHash
 {
+
 private:
-    const pair<long long, long long> mod = {1000000007, 1000000009};
-    const pair<long long, long long> base = {29, 31};
-    pair<long long, long long> hashValue = {0, 0};
-
+    int mod = 1e9 + 7;
+    vector<int> power;
     string text;
-    void calculate1stHash()
+    int length;
+    vector<int> powerUnderModulo;
+    vector<int> powerInverseUnderModulo;
+    vector<int> prefixHash;
+    int base;
+    int moduloAddition(int a, int b)
     {
-        // Time complexity: O(n)
-        long long int power1 = 1, power2 = 1;
-        for (char ch : text)
-        {
 
-            hashValue.first = (hashValue.first + (ch - 'a' + 1) * power1) % mod.first;
-            hashValue.second = (hashValue.second + (ch - 'a' + 1) * power2) % mod.second;
-            cout << hashValue.first << " " << hashValue.second << endl;
-            power1 = (power1 * base.first) % mod.first;
-            power2 = (power2 * base.second) % mod.second;
+        int result = (a + b) % mod;
+        bool isResultNegative = result < 0;
+        if (isResultNegative)
+            result += mod;
+    }
+    int moduloMultiplication(int a, int b)
+    {
+        int result = (a * 1LL * b) % mod;
+        bool isResultNegative = result < 0;
+        if (isResultNegative)
+            result += mod;
+    }
+    int moduloExponent(int exponent)
+    {
+        // calculating (a^b)%m
+        //  Complexity: O(log2exponent))
+        int result = 1;
+        while (exponent)
+        {
+            bool isExponentOdd = exponent % 2 == 1;
+            if (isExponentOdd)
+                result = moduloMultiplication(result, base);
+            base = moduloMultiplication(base, base);
+            exponent /= 2;
         }
+        return result;
+    }
+
+    void calculatePower(int base)
+    {
+        // Complexity: O(n)
+        powerUnderModulo.resize(length);
+        powerUnderModulo[0] = 1;
+        for (int i = 1; i < length; i++)
+            powerUnderModulo[i] = moduloMultiplication(powerUnderModulo[i - 1], base);
+        powerInverseUnderModulo.resize(length);
+        int powerInverse = moduloExponent(mod - 2);
+        powerInverseUnderModulo[0] = 1;
+        for (int i = 1; i < length; i++)
+            powerInverseUnderModulo[i] = moduloMultiplication(powerInverseUnderModulo[i - 1], powerInverse);
+    }
+    int getCharacterHash(char ch)
+    {
+        return ch - 'a' + 1;
+    }
+    void calculateHash()
+    {
+        prefixHash.resize(length);
+        for (int i = 0; i < length; i++)
+            prefixHash[i] = moduloAddition(
+                i == 0 ? 0 : prefixHash[i - 1],
+                moduloMultiplication(powerUnderModulo[i], getCharacterHash(text[i])));
     }
 
 public:
-    StringHash(string &s)
+    int getHash(int l, int r)
     {
-        this->text = s;
-        calculate1stHash();
-    }
-    StringHash()
-    {
-        this->text = "";
-    }
-    // getter
-    pair<long long, long long> get1stHashValue()
-    {
-        return hashValue;
+        //O(n)
+        int result = moduloAddition(prefixHash[r], (l == 0) ? 0 : -prefixHash[l - 1]);
+        result = moduloMultiplication(result, powerInverseUnderModulo[l]);
+        return result;
     }
 };
 
 int main()
 {
 
-    string s = "abc";
-    auto hashValue = StringHash(s).get1stHashValue();
-    cout << hashValue.first << " " << hashValue.second << endl;
     return 0;
 }
