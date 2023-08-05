@@ -14,6 +14,10 @@ getTralingZeroOnFactorial()
 getTotalDigitOnFactorial();
 getSmallestPrimDivisisor()
 getLargeestPrimDivisor()
+convertBaseTo(int base)
+Interget(number,base n){
+
+}
 
 */
 #include <iostream>
@@ -89,6 +93,7 @@ public:
     // getters
     long long getGCDWith(long long n)
     {
+
         return std::__gcd(number, n);
     }
     long long getLCMWith(long long n)
