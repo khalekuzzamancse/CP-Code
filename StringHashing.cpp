@@ -3,6 +3,9 @@ using namespace std;
 
 class StringHash
 {
+private:
+    int max_length = 1e6;
+    bool wasPowerCalculated = false;
 
 private:
     int mod = 1e9 + 7, base = 29, length;
@@ -76,12 +79,21 @@ public:
         this->base = base;
         this->mod = mod;
         //
-        calculatePower();
+        if (length > max_length)
+            max_length = length;
+        if (!wasPowerCalculated)
+        {
+            calculatePower();
+            wasPowerCalculated = true;
+        }
+
         calculateHash();
     }
     StringHash()
     {
     }
+
+    //
 
     int getHash(int l, int r)
     {
@@ -143,10 +155,10 @@ int main()
     // s = "def";
     // sh = StringHash(s);
     // cout << sh.getHash() << endl;
-    string s1 = "abc";
-    DoubleHash dh = DoubleHash(s1);
-    string s2 = "abcdef";
-    cout << dh.isEqual(s2, 0, 2) << endl;
+    // string s1 = "abc";
+    // DoubleHash dh = DoubleHash(s1);
+    // string s2 = "abcdef";
+    // cout << dh.isEqual(s2) << endl;
 
     return 0;
 }
