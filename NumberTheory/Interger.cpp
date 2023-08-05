@@ -52,12 +52,12 @@ public:
     {
         return number % n == 0;
     }
-    bool isCoprimeWith(long long n)
+    bool isCoPrimeWith(long long n)
     {
         long long gcd = __gcd(number, n);
         return gcd == 1;
     }
-    bool isPalindrom()
+    bool isPalindrome()
     {
         std::string rstr = numberAsString;
         std::reverse(rstr.begin(), rstr.end());
@@ -102,7 +102,7 @@ public:
             sum += numberAsString[i] - '0';
         return sum;
     }
-    long long getLargesetDigits()
+    long long getLargestDigits()
     {
         long long largest = 0;
         for (int i = 0; i < numberAsString.length(); i++)
@@ -171,8 +171,8 @@ int main()
     // cout << integer.isEven() << endl;
     // cout << integer.isDivisibleBy(3) << endl;
     // cout << integer.isMultipleOf(3) << endl;
-    // cout << integer.isCoprimeWith(3) << endl;
-    // cout << integer.isPalindrom() << endl;
+    // cout << integer.isCoPrimeWith(3) << endl;
+    // cout << integer.isPalindrome() << endl;
     // cout << integer.isPerfectSquare() << endl;
     // cout << integer.doesExits(3) << endl;
     // cout << integer.doesNotExits(5) << endl;
@@ -181,13 +181,14 @@ int main()
     // cout << integer.getGCDWith(3) << endl;
     // cout << integer.getLCMWith(3) << endl;
     // cout << integer.getSumOfDigit() << endl;
-    // cout << integer.getLargesetDigits() << endl;
+    // cout << integer.getLargestDigits() << endl;
     //  cout << integer.getSmallestDigits() << endl;
     //  cout << integer.getNumberOfDigits() << endl;
     // cout << integer.getUniqueNumberOfDigits() << endl;
     // cout << integer.getUniqueDigits().size() << endl;
-    cout << integer.getLargestPossibleNumber().get() << endl;
-    cout << integer.getSmallestPossibleNumber().get() << endl;
+    // cout << integer.getLargestPossibleNumber().get() << endl;
+    // cout << integer.getSmallestPossibleNumber().get() << endl;
+    // cout << integer.removeDigits(2, 3).get() << endl;
 
     return 0;
 }
