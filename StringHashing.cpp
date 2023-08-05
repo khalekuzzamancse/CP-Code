@@ -10,7 +10,9 @@ private:
 private:
     int mod = 1e9 + 7, base = 29, length;
     string text;
-    vector<int> powerUnderModulo, powerInverseUnderModulo, prefixHash;
+    static vector<int> powerUnderModulo;
+    static vector<int> powerInverseUnderModulo;
+    vector<int> prefixHash;
 
     int moduloAddition(int a, int b)
     {
@@ -48,15 +50,19 @@ private:
     void calculatePower()
     {
         // Complexity: O(n)
-        powerUnderModulo.resize(length);
+        if (wasPowerCalculated)
+            return;
+
+        powerUnderModulo.resize(max_length);
         powerUnderModulo[0] = 1;
-        for (int i = 1; i < length; i++)
+        for (int i = 1; i < max_length; i++)
             powerUnderModulo[i] = moduloMultiplication(powerUnderModulo[i - 1], base);
-        powerInverseUnderModulo.resize(length);
+        powerInverseUnderModulo.resize(max_length);
         int powerInverse = moduloExponent(mod - 2);
         powerInverseUnderModulo[0] = 1;
-        for (int i = 1; i < length; i++)
+        for (int i = 1; i < max_length; i++)
             powerInverseUnderModulo[i] = moduloMultiplication(powerInverseUnderModulo[i - 1], powerInverse);
+        wasPowerCalculated = true;
     }
     int getCharacterHash(char ch)
     {
@@ -80,13 +86,9 @@ public:
         this->mod = mod;
         //
         if (length > max_length)
-            max_length = length;
-        if (!wasPowerCalculated)
-        {
-            calculatePower();
-            wasPowerCalculated = true;
-        }
+            max_length = length, wasPowerCalculated = false;
 
+        calculatePower();
         calculateHash();
     }
     StringHash()
@@ -109,6 +111,9 @@ public:
         return result;
     }
 };
+// Define the static vectors
+vector<int> StringHash::powerUnderModulo;
+vector<int> StringHash::powerInverseUnderModulo;
 class DoubleHash
 {
 private:
@@ -131,34 +136,27 @@ public:
 
         return {_1st.getHash(), _2nd.getHash()};
     }
-    bool isEqual(string pattern, int l = 0, int r = 0)
+    bool isEqual(string pattern)
     {
-
         pair<int, int> textHash = getHash();
-        pair<int, int> patternHash;
-        if (l == 0 && r == 0)
-            patternHash = DoubleHash(pattern).getHash();
-        else
-            patternHash = DoubleHash(pattern).getHash(l, r);
-        // cout << textHash.first << " " << textHash.second << endl;
-        // cout << patternHash.first << " " << patternHash.second << endl;
+        pair<int, int> patternHash = DoubleHash(pattern).getHash();
         return textHash.first == patternHash.first && textHash.second == patternHash.second;
     }
+  
 };
 
 int main()
 {
     // string s = "abcdef";
-
     // StringHash sh = StringHash(s);
     // cout << sh.getHash(3, 5) << endl;
     // s = "def";
     // sh = StringHash(s);
     // cout << sh.getHash() << endl;
-    // string s1 = "abc";
-    // DoubleHash dh = DoubleHash(s1);
-    // string s2 = "abcdef";
-    // cout << dh.isEqual(s2) << endl;
+    string s1 = "abc";
+    DoubleHash dh = DoubleHash(s1);
+    string s2 = "abc";
+    cout << dh.isEqual(s2) << endl;
 
     return 0;
 }
