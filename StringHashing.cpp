@@ -16,6 +16,7 @@ private:
         bool isResultNegative = result < 0;
         if (isResultNegative)
             result += mod;
+        return result;
     }
     int moduloMultiplication(int a, int b)
     {
@@ -23,6 +24,7 @@ private:
         bool isResultNegative = result < 0;
         if (isResultNegative)
             result += mod;
+        return result;
     }
     int moduloExponent(int exponent)
     {
@@ -67,17 +69,20 @@ private:
     }
 
 public:
-    StringHash(string text, int base = 32, int mod = 1e9 + 7)
+    StringHash(string text, int base = 29, int mod = 1e9 + 7)
     {
         this->text = text;
         this->length = text.length();
         this->base = base;
         this->mod = mod;
         //
-        calculateHash();
         calculatePower();
         calculateHash();
     }
+    StringHash()
+    {
+    }
+
     int getHash(int l, int r)
     {
         // O(n)
@@ -87,12 +92,61 @@ public:
     }
     int getHash()
     {
-        return prefixHash[length - 1];
+        int result = prefixHash[length - 1];
+        result = moduloMultiplication(result, powerInverseUnderModulo[0]);
+        return result;
+    }
+};
+class DoubleHash
+{
+private:
+    string text;
+    StringHash _1st, _2nd;
+
+public:
+    DoubleHash(string text, int base = 31, int mod = 1e9 + 9)
+    {
+        _1st = StringHash(text);
+        _2nd = StringHash(text, base, mod);
+    }
+    pair<int, int> getHash(int l, int r)
+    {
+
+        return {_1st.getHash(l, r), _2nd.getHash(l, r)};
+    }
+    pair<int, int> getHash()
+    {
+
+        return {_1st.getHash(), _2nd.getHash()};
+    }
+    bool isEqual(string pattern, int l = 0, int r = 0)
+    {
+
+        pair<int, int> textHash = getHash();
+        pair<int, int> patternHash;
+        if (l == 0 && r == 0)
+            patternHash = DoubleHash(pattern).getHash();
+        else
+            patternHash = DoubleHash(pattern).getHash(l, r);
+        // cout << textHash.first << " " << textHash.second << endl;
+        // cout << patternHash.first << " " << patternHash.second << endl;
+        return textHash.first == patternHash.first && textHash.second == patternHash.second;
     }
 };
 
 int main()
 {
+    // string s = "abcdef";
+
+    // StringHash sh = StringHash(s);
+    // cout << sh.getHash(3, 5) << endl;
+    // s = "def";
+    // sh = StringHash(s);
+    // cout << sh.getHash() << endl;
+    string s1 = "abc";
+    DoubleHash dh = DoubleHash(s1);
+    string s2 = "abcdef";
+    cout << dh.isEqual(s2, 0, 2) << endl;
 
     return 0;
 }
