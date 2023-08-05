@@ -23,18 +23,18 @@ getLargeestPrimDivisor()
 #include <functional>
 #include <cmath>
 #include <set>
-using namespace std;
+
 class Integer
 {
 private:
     long long number;
-    string numberAsString;
+    std::string numberAsString;
 
 public:
     Integer(long long number)
     {
         this->number = number;
-        numberAsString = to_string(number);
+        numberAsString = std::to_string(number);
     }
     bool isOdd()
     {
@@ -54,7 +54,7 @@ public:
     }
     bool isCoPrimeWith(long long n)
     {
-        long long gcd = __gcd(number, n);
+        long long gcd = std::__gcd(number, n);
         return gcd == 1;
     }
     bool isPalindrome()
@@ -89,11 +89,11 @@ public:
     // getters
     long long getGCDWith(long long n)
     {
-        return __gcd(number, n);
+        return std::__gcd(number, n);
     }
     long long getLCMWith(long long n)
     {
-        return (number / __gcd(number, n)) * n;
+        return (number / std::__gcd(number, n)) * n;
     }
     long long getSumOfDigit()
     {
@@ -129,9 +129,9 @@ public:
     {
         return getUniqueDigits().size();
     }
-    set<int> getUniqueDigits()
+    std::set<int> getUniqueDigits()
     {
-        set<int> s;
+        std::set<int> s;
         for (int i = 0; i < numberAsString.length(); i++)
             s.insert(numberAsString[i] - '0');
         return s;
@@ -139,19 +139,19 @@ public:
 
     Integer removeDigits(int l, int r)
     {
-        string s = numberAsString;
+        std::string s = numberAsString;
         s.erase(s.begin() + l, s.begin() + r + 1);
         long long numberAsLongLong = std::stoll(s);
         return Integer(numberAsLongLong);
     }
 
-    Integer getSmallestPossibleNumber()
+    Integer getSmallestPermutation()
     {
-        string s = numberAsString;
+        std::string s = numberAsString;
         std::sort(s.begin(), s.end());
         return Integer(std::stoll(s));
     }
-    Integer getLargestPossibleNumber()
+    Integer getLargestPermutation()
     {
         std::string s = numberAsString;
         std::sort(s.begin(), s.end(), std::greater<char>());
@@ -164,31 +164,38 @@ public:
     }
 };
 
+/*
+Tested:
 int main()
 {
     Integer integer(123004);
-    // cout << integer.isOdd() << endl;
-    // cout << integer.isEven() << endl;
-    // cout << integer.isDivisibleBy(3) << endl;
-    // cout << integer.isMultipleOf(3) << endl;
-    // cout << integer.isCoPrimeWith(3) << endl;
-    // cout << integer.isPalindrome() << endl;
-    // cout << integer.isPerfectSquare() << endl;
-    // cout << integer.doesExits(3) << endl;
-    // cout << integer.doesNotExits(5) << endl;
-    // cout << integer.isAllUniqueDigit() << endl;
+    cout << integer.isOdd() << endl;
+    cout << integer.isEven() << endl;
+    cout << integer.isDivisibleBy(3) << endl;
+    cout << integer.isMultipleOf(3) << endl;
+    cout << integer.isCoPrimeWith(3) << endl;
+    cout << integer.isPalindrome() << endl;
+    cout << integer.isPerfectSquare() << endl;
+    cout << integer.doesExits(3) << endl;
+    cout << integer.doesNotExits(5) << endl;
+    cout << integer.isAllUniqueDigit() << endl;
 
-    // cout << integer.getGCDWith(3) << endl;
-    // cout << integer.getLCMWith(3) << endl;
-    // cout << integer.getSumOfDigit() << endl;
-    // cout << integer.getLargestDigits() << endl;
-    //  cout << integer.getSmallestDigits() << endl;
-    //  cout << integer.getNumberOfDigits() << endl;
-    // cout << integer.getUniqueNumberOfDigits() << endl;
-    // cout << integer.getUniqueDigits().size() << endl;
-    // cout << integer.getLargestPossibleNumber().get() << endl;
-    // cout << integer.getSmallestPossibleNumber().get() << endl;
-    // cout << integer.removeDigits(2, 3).get() << endl;
+    cout << integer.getGCDWith(3) << endl;
+    cout << integer.getLCMWith(3) << endl;
+    cout << integer.getSumOfDigit() << endl;
+    cout << integer.getLargestDigits() << endl;
+    cout << integer.getSmallestDigits() << endl;
+    cout << integer.getNumberOfDigits() << endl;
+    cout << integer.getUniqueNumberOfDigits() << endl;
+    cout << integer.getUniqueDigits().size() << endl;
+    cout << integer.getLargestPermutation().get() << endl;
+    cout << integer.getSmallestPermutation().get() << endl;
+    cout << integer.removeDigits(2, 3).get() << endl;
 
     return 0;
 }
+
+
+
+
+*/
