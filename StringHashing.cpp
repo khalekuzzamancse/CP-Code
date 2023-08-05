@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <utility>
 using namespace std;
 
 class StringHash
@@ -156,10 +159,11 @@ int main()
     // DoubleHash dh = DoubleHash(s1);
     // string s2 = "abc";
     // cout << dh.isEqual(s2) << endl;
-   
+
     /*
     Tested and passed problmes:
     01=https://codeforces.com/contest/1800/problem/A
+        take=max_length=50-55,otherwise TLE
     */
 
     return 0;
