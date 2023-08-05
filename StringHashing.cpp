@@ -142,7 +142,6 @@ public:
         pair<int, int> patternHash = DoubleHash(pattern).getHash();
         return textHash.first == patternHash.first && textHash.second == patternHash.second;
     }
-  
 };
 
 int main()
@@ -153,10 +152,15 @@ int main()
     // s = "def";
     // sh = StringHash(s);
     // cout << sh.getHash() << endl;
-    string s1 = "abc";
-    DoubleHash dh = DoubleHash(s1);
-    string s2 = "abc";
-    cout << dh.isEqual(s2) << endl;
+    // string s1 = "abc";
+    // DoubleHash dh = DoubleHash(s1);
+    // string s2 = "abc";
+    // cout << dh.isEqual(s2) << endl;
+   
+    /*
+    Tested and passed problmes:
+    01=https://codeforces.com/contest/1800/problem/A
+    */
 
     return 0;
 }
