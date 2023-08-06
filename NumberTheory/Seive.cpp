@@ -2,62 +2,86 @@
 #include <vector>
 #include <cmath>
 using namespace std;
-class PrimeUtils
+
+class Sieve
 {
 private:
-    const int mx = 1e2 + 5;
-    static vector<bool> primeContainer;
+    const static int mx = 1e2 + 5;
+    static bool primeContainer[mx + 1];
     static vector<int> primes;
     bool alreadyPrimeGenerated = false;
+    bool alreadyPrimeCollected = false;
+    const bool cross = true;
+    const bool notCross = false;
 
 private:
     void collectPrimes()
     {
+        if (alreadyPrimeCollected)
+            return;
         primes.push_back(2);
-        for (int i = 3; i < mx; i += 2)
+        for (int i = 3; i <= mx; i += 2)
         {
-            bool wasMarkedAsPrimed = primeContainer[i] == true;
-            if (wasMarkedAsPrimed)
+            if (primeContainer[i] == notCross)
                 primes.push_back(i);
         }
+        alreadyPrimeCollected = true;
+    }
+    void crossMultipleOf(int i)
+    {
+        for (int multiple = i * i; multiple <= mx; multiple += i)
+            primeContainer[multiple] = cross;
     }
 
-    void generatePrimes(void)
+    void generatePrimesSieve()
     {
-        primeContainer.resize(mx + 1);
-        for (int i = 2; i <= mx; ++i)
-            primeContainer[i] = true;
-        for (int i = 2; i * i <= mx; ++i)
+        // Time complexity: O(nloglog(n)))
+        if (alreadyPrimeGenerated)
+            return;
+        int upto = std::sqrt(mx);
+        primeContainer[0] = cross, primeContainer[1] = cross;
+        for (int i = 2; i <= upto; ++i)
         {
-            if (primeContainer[i] == true)
-            {
-                for (int j = i * i; j <= mx; j += i)
-                    primeContainer[j] = false;
-            }
+            if (primeContainer[i] == notCross)
+                crossMultipleOf(i);
         }
+        alreadyPrimeGenerated = true;
     }
+
+    void generatePrimesSegmentedSieve()
+    {
+    }
+    void factorizeFactorialOf()
+    {
+    }
+    void powerOfXinFactorial()
+    {
+    }
+    // trailing zero finding
+    // leading digit of a factorial
+    // digit in n factorial ->log10(n!)=log10(1)+log10(2)+.....log10(n)
+    // printing divisor of 1 to N
+    // big mod ,a^b%m using modular arithmetic
 
 public:
-    PrimeUtils()
+    Sieve()
     {
-        if (!alreadyPrimeGenerated)
-        {
-            generatePrimes();
-            collectPrimes();
-            alreadyPrimeGenerated = true;
-        }
     }
+
     vector<int> &getPrimes()
     {
+        collectPrimes();
         return primes;
     }
     bool isPrime(int number)
     {
-        return primeContainer[number];
+        // Time complexity: O(1)
+        generatePrimesSieve();
+        return primeContainer[number] == notCross;
     }
     void toString()
     {
-
+        collectPrimes();
         for (int it : primes)
             cout << it << " ";
         cout << endl;
@@ -67,6 +91,7 @@ public:
     vector<pair<long long, int>> getPrimeFactorizationNaive(long long n)
     {
         // O(log(n)< T < O(sqrt(n))
+        collectPrimes();
         vector<pair<long long, int>> ans;
         int root = std::sqrt(n);
         for (int i = 0; i < primes.size() && primes[i] <= root; i++)
@@ -95,6 +120,7 @@ public:
     }
     int getNumberOfDivisors(long long n)
     {
+
         auto factors = getPrimeFactorizationNaive(n);
         int cnt = 1;
         for (auto it : factors)
@@ -106,6 +132,7 @@ public:
     }
     long long getSumOfDivisors(long long n)
     {
+
         auto factors = getPrimeFactorizationNaive(n);
         long long sum = 1;
         for (auto it : factors)
@@ -118,17 +145,117 @@ public:
         }
         return sum;
     }
+    // long long gcdUsingPrimeFactorization(long long n)
+    // {
+    //     auto factors = getPrimeFactorizationNaive(n);
+    // }
+    // long long lcmUsingPrimeFactorization(long long n)
+    // {
+    //     auto factors = getPrimeFactorizationNaive(n);
+    // }
 };
 // Define the static vectors
-vector<bool> PrimeUtils::primeContainer;
-vector<int> PrimeUtils::primes;
+vector<int> Sieve::primes;
+bool Sieve::primeContainer[];
+class PrimalityTest
+{
+
+public:
+    bool isPrimeNaive(long long integer)
+    {
+        // Time complexity: O( sqrt(n) )
+        if (integer < 2)
+            return false;
+        int root = std::sqrt(integer);
+        for (int i = 2; i <= root; i++)
+        {
+            bool isDivisor = integer % i == 0;
+            if (isDivisor)
+                return false;
+        }
+        return true;
+    }
+    bool isPrimeNaiveImproved(long long n)
+    {
+        if (n == 2 || n == 3)
+            return true;
+        if (n <= 1 || n % 2 == 0 || n % 3 == 0)
+            return false;
+        for (int i = 5; i * i <= n; i += 6)
+            if (n % i == 0 || n % (i + 2) == 0)
+                return false;
+
+        return true;
+    }
+
+private:
+    long long power(long long x, unsigned long long y, long long p)
+    {
+        long long res = 1;
+        x = x % p;
+        while (y > 0)
+        {
+            if (y & 1)
+                res = (res * x) % p;
+
+            y = y >> 1;
+            x = (x * x) % p;
+        }
+        return res;
+    }
+
+    bool millerTest(long long d, long long n)
+    {
+        long long a = 2 + rand() % (n - 4);
+
+        long long x = power(a, d, n);
+
+        if (x == 1 || x == n - 1)
+            return true;
+
+        while (d != n - 1)
+        {
+            x = (x * x) % n;
+            d *= 2;
+
+            if (x == 1)
+                return false;
+            if (x == n - 1)
+                return true;
+        }
+
+        return false;
+    }
+
+public:
+    bool isPrimeMillerRobin(long long n, long long k = 50)
+    {
+        if (n <= 1 || n == 4)
+            return false;
+        if (n <= 3)
+            return true;
+
+        long long d = n - 1;
+        while (d % 2 == 0)
+            d /= 2;
+
+        for (long long i = 0; i < k; i++)
+            if (!millerTest(d, n))
+                return false;
+        return true;
+    }
+};
 
 int main()
 {
 
-    PrimeUtils s = PrimeUtils();
-    // cout << s.getNumberOfDivisors(10) << endl;
-    cout << s.getSumOfDivisors(8) << endl;
+    Sieve s = Sieve();
+    cout << s.getNumberOfDivisors(10) << endl;
+    cout << s.getSumOfDivisors(10) << endl;
+    // cout << s.isPrime(4) << endl;
+
+    // PrimalityTest t = PrimalityTest();
+    // cout << t.isPrimeMillerRobin(11) << endl;
 
     return 0;
 }
