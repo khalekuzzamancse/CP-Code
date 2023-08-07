@@ -67,11 +67,46 @@ public:
     }
 };
 int PrimeFactorizer::smallestPrimeFactors[];
+class DivisorUtils
+{
+private:
+    PrimeFactorizer pf;
 
+public:
+    DivisorUtils() : pf(PrimeFactorizer()){
+
+                     };
+
+public:
+    int getNumberOfDivisors(int n)
+    {
+        vector<pair<int, int>> factors = pf.getPrimeFactorization(n);
+        int cnt = 1;
+        for (auto it : factors)
+        {
+            int exponent = it.second;
+            cnt *= (exponent + 1);
+        }
+        return cnt;
+    }
+    long long getSumOfDivisors(int n)
+    {
+
+        auto factors = pf.getPrimeFactorization(n);
+        long long sum = 1;
+        for (auto it : factors)
+        {
+            long long exponent = it.second;
+            long long base = it.first;
+            long long p = (pow(base, (exponent + 1)) - 1) / (base - 1);
+            sum *= p;
+        }
+        return sum;
+    }
+};
 int main()
 {
-    PrimeFactorizer pf = PrimeFactorizer();
-    pf.getPrimeFactorization(13);
-
+    DivisorUtils util = DivisorUtils();
+    cout << util.getSumOfDivisors(8) << endl;
     return 0;
 }
