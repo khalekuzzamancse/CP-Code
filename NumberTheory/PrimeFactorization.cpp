@@ -7,15 +7,22 @@ class PrimeFactorizer
 private:
     bool alreadyCalculated = false;
     const bool notCross = 0;
-    const bool notGetSmallestPrimeFactorYet = 0;
     static const int mx = 50;
     static int smallestPrimeFactors[mx + 1];
-    void updateSmallestPrimeFactors(int primeFactor)
+    bool shouldInitializeSmallestPrimeFactor(int number)
+    {
+        return smallestPrimeFactors[number] == 0;
+    }
+    bool isPrime(int number)
+    {
+        return smallestPrimeFactors[number] == notCross;
+    }
+
+    void updateMultipleOf(int primeFactor)
     {
         for (int multiple = primeFactor * primeFactor; multiple <= mx; multiple += primeFactor)
         {
-
-            if (!notGetSmallestPrimeFactorYet)
+            if (shouldInitializeSmallestPrimeFactor(multiple))
                 smallestPrimeFactors[multiple] = primeFactor;
         }
     }
@@ -27,13 +34,8 @@ private:
         int till = std::sqrt(mx);
         for (int i = 2; i <= till; ++i)
         {
-            bool isItPrime = smallestPrimeFactors[i] == notCross;
-            if (isItPrime)
-            {
-                int prime = i;
-                smallestPrimeFactors[i] = prime;
-                updateSmallestPrimeFactors(prime);
-            }
+            if (isPrime(i))
+                updateMultipleOf(i);
         }
 
         alreadyCalculated = true;
@@ -44,11 +46,15 @@ public:
     {
         generateSmallestFactors();
     }
+    int getSmallestPrimeFactor(int n)
+    {
+        return smallestPrimeFactors[n] == 0 ? n : smallestPrimeFactors[n];
+    }
     void toString()
     {
         for (int i = 2; i <= mx; i++)
         {
-            cout << i << ":" << smallestPrimeFactors[i] << endl;
+            cout << i << ":" << getSmallestPrimeFactor(i) << endl;
         }
     }
 };
