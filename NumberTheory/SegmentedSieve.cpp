@@ -25,12 +25,6 @@ private:
     bool alreadyPrimeCollected = false;
     const bool cross = true;
     const bool notCross = false;
-    // void crossMultipleOf(int prime)
-    // {
-    //     long long startFrom = static_cast<long long>(std::ceil(static_cast<double>(L) / prime) * prime);
-    //     for (long long multiple = prime * prime; multiple <= mx; multiple += prime)
-    //         primeContainer[getEncodedIndex(multiple)] = cross;
-    // }
 
     void crossMultipleOf(int i, bool primeContainer[])
     {
@@ -57,20 +51,12 @@ private:
         // collecting primes
         primes.push_back(2);
         for (int i = 3; i <= mx; i += 2)
-        {
             if (primeContainer[i] == notCross)
                 primes.push_back(i);
-        }
         alreadyPrimeCollected = true;
     }
 
 public:
-    vector<int> &getPrimes()
-    {
-
-        return primes;
-    }
-
     void toString()
     {
 
@@ -80,21 +66,41 @@ public:
     }
 
 private:
+    static const int size = 30;
+    static bool segmentPrimes[size]; // must size= RangeLength hardcoded
     int getEncodedIndex(long long number)
     {
-
         return number - L;
     }
     long long getDecodedNumber(int index)
     {
         return L + index;
     }
+    void crossMultipleOf(int prime)
+    {
+        long long startFrom = static_cast<long long>(std::ceil(static_cast<double>(L) / prime) * prime);
+        for (long long multiple = startFrom; multiple <= R; multiple += prime)
+            segmentPrimes[getEncodedIndex(multiple)] = cross;
+    }
+
+public:
+    void generateSegmentPrimes()
+    {
+        collectPrimes();
+        for (int prime : primes)
+            crossMultipleOf(prime);
+    }
+    bool isPrime(long long number)
+    {
+        return segmentPrimes[getEncodedIndex(number)] == notCross;
+    }
 };
-// Define the static vectors
 vector<int> SegmentedSieve::primes;
+bool SegmentedSieve::segmentPrimes[];
+
 int main()
 {
-    SegmentedSieve s = SegmentedSieve(200, 300);
-    s.toString();
+    SegmentedSieve s = SegmentedSieve(51, 80);
+    s.generateSegmentPrimes();
     return 0;
 }
