@@ -56,18 +56,8 @@ private:
         alreadyPrimeCollected = true;
     }
 
-public:
-    void toString()
-    {
-
-        for (int it : primes)
-            cout << it << " ";
-        cout << endl;
-    }
-
 private:
-    static const int size = 30;
-    static bool segmentPrimes[size]; // must size= RangeLength hardcoded
+    static vector<bool> segmentPrimes;
     int getEncodedIndex(long long number)
     {
         return number - L;
@@ -87,6 +77,7 @@ public:
     void generateSegmentPrimes()
     {
         collectPrimes();
+        segmentPrimes.resize(rangeLength);
         for (int prime : primes)
             crossMultipleOf(prime);
     }
@@ -94,13 +85,24 @@ public:
     {
         return segmentPrimes[getEncodedIndex(number)] == notCross;
     }
+    void toString()
+    {
+        for (int i = 0; i < rangeLength; i++)
+        {
+            long long number = getDecodedNumber(i);
+            if (isPrime(number))
+                cout << number << " ";
+        }
+        cout << endl;
+    }
 };
 vector<int> SegmentedSieve::primes;
-bool SegmentedSieve::segmentPrimes[];
+vector<bool> SegmentedSieve::segmentPrimes;
 
 int main()
 {
-    SegmentedSieve s = SegmentedSieve(51, 80);
+    SegmentedSieve s = SegmentedSieve(20, 50);
     s.generateSegmentPrimes();
+    s.toString();
     return 0;
 }
