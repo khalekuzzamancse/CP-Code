@@ -7,7 +7,7 @@ class PrimeFactorizer
 private:
     bool alreadyCalculated = false;
     const bool notCross = 0;
-    static const int mx = 50;
+    static const int mx = 1e2;
     static int smallestPrimeFactors[mx + 1];
     bool shouldInitializeSmallestPrimeFactor(int number)
     {
@@ -29,6 +29,7 @@ private:
 
     void generateSmallestFactors()
     {
+
         if (alreadyCalculated)
             return;
         int till = std::sqrt(mx);
@@ -37,7 +38,6 @@ private:
             if (isPrime(i))
                 updateMultipleOf(i);
         }
-
         alreadyCalculated = true;
     }
 
@@ -50,12 +50,20 @@ public:
     {
         return smallestPrimeFactors[n] == 0 ? n : smallestPrimeFactors[n];
     }
-    void toString()
+
+    vector<pair<int, int>> getPrimeFactorization(int n)
     {
-        for (int i = 2; i <= mx; i++)
+
+        vector<pair<int, int>> factorization;
+        while (n > 1)
         {
-            cout << i << ":" << getSmallestPrimeFactor(i) << endl;
+            int p = getSmallestPrimeFactor(n);
+            int exponent = 0;
+            while (n % p == 0)
+                exponent++, n = n / p;
+            factorization.push_back({p, exponent});
         }
+        return factorization;
     }
 };
 int PrimeFactorizer::smallestPrimeFactors[];
@@ -63,7 +71,7 @@ int PrimeFactorizer::smallestPrimeFactors[];
 int main()
 {
     PrimeFactorizer pf = PrimeFactorizer();
-    pf.toString();
+    pf.getPrimeFactorization(13);
 
     return 0;
 }
