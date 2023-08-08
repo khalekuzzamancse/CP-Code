@@ -35,7 +35,7 @@ private:
         int till = std::sqrt(mx);
         for (int i = 2; i <= till; ++i)
         {
-            if (isPrime(i)) 
+            if (isPrime(i))
                 updateMultipleOf(i);
         }
         alreadyCalculated = true;
@@ -51,27 +51,48 @@ public:
         return smallestPrimeFactors[n] == 0 ? n : smallestPrimeFactors[n];
     }
 
-    vector<pair<int, int>> getPrimeFactorization(int n)
+    vector<pair<long long, int>> getPrimeFactorizationNaive(long long n)
     {
 
-        vector<pair<int, int>> factorization;
-        while (n > 1)
+        int cnt = 0;
+        bool isFactored = cnt > 0;
+
+        while (n % 2 == 0)
         {
-            int p = getSmallestPrimeFactor(n);
-            int exponent = 0;
-            while (n % p == 0)
-                exponent++, n = n / p;
-            factorization.push_back({p, exponent});
+            cnt++;
+            n = n / 2;
         }
-        return factorization;
+        vector<pair<long long, int>> factors;
+        if (cnt > 0)
+            factors.push_back({2, cnt});
+
+        for (int i = 3; i <= sqrt(n); i = i + 2)
+        {
+            cnt = 0;
+            while (n % i == 0)
+            {
+                cnt++;
+                n = n / i;
+            }
+            if (cnt > 0)
+                factors.push_back({2, cnt});
+        }
+
+        if (n > 2)
+            factors.push_back({n, 1});
+        // for (auto it : factors)
+        //     cout << it.first << "^" << it.second << endl;
+        return factors;
     }
 };
 int PrimeFactorizer::smallestPrimeFactors[];
 
-// int main()
-// {
-//     PrimeFactorizer pf = PrimeFactorizer();
-//     pf.getPrimeFactorization(13);
+int main()
+{
+    PrimeFactorizer pf = PrimeFactorizer();
+    auto f = pf.getPrimeFactorizationNaive(21);
+    for (auto it : f)
+        cout << it.first << "^" << it.second << endl;
 
-//     return 0;
-// }
+    return 0;
+}

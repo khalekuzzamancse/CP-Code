@@ -18,7 +18,9 @@ convertBaseTo(int base)
 Interget(number,base n){
 
 }
-
+replaceDigitIf()
+increseDigitIf()
+decreaseDigitIF()
 */
 #include <iostream>
 #include <string>
@@ -150,6 +152,20 @@ public:
         return Integer(numberAsLongLong);
     }
 
+    //
+    bool ifAllDigit(std::function<bool(const int &)> predicate)
+    {
+        for (int i = 0; i < numberAsString.length(); i++)
+            if (!predicate(numberAsString[i] - '0'))
+                return false;
+        return true;
+    }
+    void forEachDigit(std::function<void(int digit)> lambda)
+    {
+        for (int i = 0; i < numberAsString.length(); i++)
+            lambda(numberAsString[i] - '0');
+    }
+
     Integer getSmallestPermutation()
     {
         std::string s = numberAsString;
@@ -200,7 +216,8 @@ int main()
     return 0;
 }
 
+Sloved Problems:
+https://practice.geeksforgeeks.org/problems/sum-of-primes0042/1?page=1&difficulty[]=-1&category[]=Prime%20Number&category[]=number-theory&sortBy=submissions
 
 
-
-*/
+/*
