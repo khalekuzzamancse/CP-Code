@@ -3,13 +3,6 @@ Problem Link:
 https://practice.geeksforgeeks.org/problems/full-prime2659/1?page=1&difficulty[]=-2&category[]=Prime%20Number&category[]=number-theory&sortBy=submissions
 */
 
-//{ Driver Code Starts
-// Initial template for C++
-#include <bits/stdc++.h>
-using namespace std;
-
-// } Driver Code Ends
-// User function template for C++
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -257,6 +250,7 @@ public:
         return number;
     }
 };
+
 class Solution
 {
 public:
@@ -271,17 +265,3 @@ public:
         return ans;
     }
 };
-
-//{ Driver Code Starts.
-int main()
-{
-    int t;
-    cin >> t;
-    while (t--)
-    {
-        int N;
-        cin >> N;
-        Solution ob;
-        cout << ob.fullPrime(N) << "\n";
-    }
-}
