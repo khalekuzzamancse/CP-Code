@@ -254,13 +254,16 @@ public:
 class Solution
 {
 public:
+    static bool isPrime(int n)
+    {
+        return PrimalityTest().isPrimeMillerRobin(n);
+    }
     int fullPrime(int n)
     {
         Integer in = Integer(n);
         PrimalityTest tester = PrimalityTest();
         bool ans = tester.isPrimeMillerRobin(n);
-        bool isFullPrime = in.ifAllDigit([&tester](const int &d)
-                                         { return tester.isPrimeMillerRobin(d); });
+        bool isFullPrime = in.ifAllDigit(isPrime);
         ans = ans && isFullPrime;
         return ans;
     }
