@@ -76,7 +76,6 @@ public:
 vector<int> Sieve::primes;
 bool Sieve::primeContainer[];
 
-
 int main()
 {
 
