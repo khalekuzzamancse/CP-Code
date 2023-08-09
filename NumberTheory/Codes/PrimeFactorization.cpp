@@ -28,6 +28,13 @@ public:
     const vector<Factor> &factors = _factors;
 
 public:
+    PrimeFactor()
+    {
+    }
+
+    PrimeFactor(vector<Factor> factors) : _factors(factors) {}
+
+public:
     void add(long long base, int exponent)
     {
         _factors.push_back(Factor(base, exponent));
@@ -64,36 +71,57 @@ public:
                 return _factors[i].exponent;
         return 0;
     }
-    map<long long, pair<int, int>> getCommonFactors(vector<Factor> f1, vector<Factor> f2)
+    map<long long, pair<int, int>> getCommonFactorsWith(PrimeFactor a)
     {
+        vector<Factor> f2 = a.factors;
         map<long long, pair<int, int>> result;
-        for (int i = 0; i < f1.size(); i++)
+        for (int i = 0; i < factors.size(); i++)
         {
             for (int j = 0; j < f2.size(); j++)
             {
-                if (f1[i].base == f2[j].base)
-                    result[f1[i].base] = make_pair(f1[i].exponent, f2[j].exponent);
+                if (factors[i].base == f2[j].base)
+                    result[factors[i].base] = make_pair(factors[i].exponent, f2[j].exponent);
             }
         }
         return result;
     }
-    vector<Factor> getCommonFactorsWithMinExponents(vector<Factor> f1, vector<Factor> f2)
+    PrimeFactor getCommonFactorsWithMinExponents(PrimeFactor a)
     {
+        vector<Factor> f = a.factors;
         vector<Factor> result;
-        for (int i = 0; i < f1.size(); i++)
+        for (int i = 0; i < factors.size(); i++)
         {
-            for (int j = 0; j < f2.size(); j++)
+            for (int j = 0; j < f.size(); j++)
             {
-                long long base = f1[i].base;
+                long long base = factors[i].base;
 
-                if (base == f2[j].base)
+                if (base == f[j].base)
                 {
-                    int minExponent = min(f1[i].base, f2[j].base);
+                    int minExponent = min(factors[i].exponent, f[j].exponent);
                     result.push_back(Factor(base, minExponent));
                 }
             }
         }
-        return result;
+        return PrimeFactor(result);
+    }
+    PrimeFactor getCommonFactorsWithMaxExponents(PrimeFactor a)
+    {
+        vector<Factor> f = a.factors;
+        vector<Factor> result;
+        for (int i = 0; i < factors.size(); i++)
+        {
+            for (int j = 0; j < f.size(); j++)
+            {
+                long long base = factors[i].base;
+
+                if (base == f[j].base)
+                {
+                    int maxExponent = max(factors[i].exponent, f[j].exponent);
+                    result.push_back(Factor(base, maxExponent));
+                }
+            }
+        }
+        return PrimeFactor(result);
     }
 
 public:
@@ -155,10 +183,27 @@ public:
 
 public:
     // Sieve
-    int getSmallestPrimeFactor()
+    int getSmallestPrimeFactor(int n)
     {
         generateSmallestFactors();
         return smallestPrimeFactors[n] == 0 ? n : smallestPrimeFactors[n];
+    }
+
+    PrimeFactor getPrimeFactorizationSieve()
+    {
+        generateSmallestFactors();
+
+        PrimeFactor factor = PrimeFactor();
+
+        while (n > 1)
+        {
+            int p = getSmallestPrimeFactor(n);
+            int exponent = 0;
+            while (n % p == 0)
+                exponent++, n = n / p;
+            factor.add(p, exponent);
+        }
+        return factor;
     }
 
 public:
@@ -198,9 +243,12 @@ int PrimeFactorizer::smallestPrimeFactors[];
 
 int main()
 {
-    PrimeFactorizer pf = PrimeFactorizer(20);
-    auto f = pf.getPrimeFactorizationNaive();
-    f.toString();
+
+    auto a = PrimeFactorizer(3).getPrimeFactorizationNaive();
+    a.toString();
+    auto b = PrimeFactorizer(5).getPrimeFactorizationNaive();
+    b.toString();
+    a.getCommonFactorsWithMinExponents(b).toString();
 
     return 0;
 }
