@@ -66,6 +66,8 @@ public:
         return factorization;
     }
 };
+
+
 int PrimeFactorizer::smallestPrimeFactors[];
 class DivisorUtils
 {
