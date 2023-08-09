@@ -3,44 +3,49 @@
 #include <cmath>
 #include <map>
 using namespace std;
+class Factor
+{
+public:
+    const long long base;
+    const int exponent;
+
+public:
+    Factor(long long base, int exponent)
+        : base(base), exponent(exponent) {}
+    void toString(std::string separator = "^")
+    {
+        cout << "(" << base << "^" << exponent << ")";
+    }
+};
+
 class PrimeFactor
 {
 public:
-    class Factor
-    {
-    public:
-        const long long base;
-        const int exponent;
-
-    public:
-        Factor(long long base, int exponent) : base(base), exponent(exponent) {}
-    };
-
 private:
-    vector<Factor> factors;
+    vector<Factor> _factors;
+
+public:
+    const vector<Factor> &factors = _factors;
 
 public:
     void add(long long base, int exponent)
     {
-        factors.push_back(Factor(base, exponent));
+        _factors.push_back(Factor(base, exponent));
     }
-    vector<Factor> getFactors()
-    {
-        return factors;
-    }
+
     Factor getLargestFactor()
     {
-        return factors[factors.size() - 1];
+        return _factors[_factors.size() - 1];
     }
     Factor getSmallestFactor()
     {
-        return factors[0];
+        return _factors[0];
     }
     bool isFactorOf(long long prime)
     {
-        for (int i = 0; i < factors.size(); i++)
+        for (int i = 0; i < _factors.size(); i++)
         {
-            if (factors[i].base == prime)
+            if (_factors[i].base == prime)
             {
                 return true;
             }
@@ -53,11 +58,11 @@ public:
     }
     int getExponentOf(long long base)
     {
-        if (isNotFactorOf(base))
-            return 0;
-        for (int i = 0; i < factors.size(); i++)
-            if (factors[i].base == base)
-                return factors[i].exponent;
+
+        for (int i = 0; i < _factors.size(); i++)
+            if (_factors[i].base == base)
+                return _factors[i].exponent;
+        return 0;
     }
     map<long long, pair<int, int>> getCommonFactors(vector<Factor> f1, vector<Factor> f2)
     {
@@ -90,7 +95,16 @@ public:
         }
         return result;
     }
+
+public:
+    void toString()
+    {
+        for (auto it : factors)
+            it.toString();
+        cout << endl;
+    }
 };
+
 class PrimeFactorizer
 {
 private:
@@ -130,17 +144,26 @@ private:
         alreadyCalculated = true;
     }
 
+private:
+    long long n;
+
 public:
-    PrimeFactorizer()
+    PrimeFactorizer(long long n)
+    {
+        this->n = n;
+    }
+
+public:
+    // Sieve
+    int getSmallestPrimeFactor()
     {
         generateSmallestFactors();
-    }
-    int getSmallestPrimeFactor(int n)
-    {
         return smallestPrimeFactors[n] == 0 ? n : smallestPrimeFactors[n];
     }
 
-    PrimeFactor getPrimeFactorizationNaive(long long n)
+public:
+    // Naive
+    PrimeFactor getPrimeFactorizationNaive()
     {
 
         int cnt = 0;
@@ -175,10 +198,9 @@ int PrimeFactorizer::smallestPrimeFactors[];
 
 int main()
 {
-    PrimeFactorizer pf = PrimeFactorizer();
-    auto f = pf.getPrimeFactorizationNaive(21);
-    for (auto it : f.getFactors())
-        cout << it.base << "^" << it.exponent << endl;
+    PrimeFactorizer pf = PrimeFactorizer(20);
+    auto f = pf.getPrimeFactorizationNaive();
+    f.toString();
 
     return 0;
 }
