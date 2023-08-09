@@ -160,6 +160,18 @@ public:
                 return false;
         return true;
     }
+    Integer replaceDigitIf(std::function<int(int digit, int position)> lambda)
+    {
+        std::string num = numberAsString;
+        for (int i = 0; i < num.length(); i++)
+        {
+            int replaceBy = lambda(num[i] - '0', i);
+            if (replaceBy != -1)
+                num[i] = replaceBy + '0';
+        }
+        return Integer(std::stoll(num));
+    }
+
     void forEachDigit(std::function<void(int digit)> lambda)
     {
         for (int i = 0; i < numberAsString.length(); i++)

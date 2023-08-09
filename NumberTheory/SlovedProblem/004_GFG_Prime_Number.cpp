@@ -1,0 +1,79 @@
+/*
+Link:https://practice.geeksforgeeks.org/problems/prime-number2314/1?page=1&difficulty[]=-1&category[]=Prime%20Number&category[]=number-theory&sortBy=submissions
+Statement:
+Given an integer n, find whether it is a prime number or not.
+Solution:
+Used Miller-Rabin Primality algorithm,the code used from PrimalityTest class.
+
+*/
+#include <bits/stdc++.h>
+using namespace std;
+class PrimalityTest
+{
+
+private:
+    long long power(long long x, unsigned long long y, long long p)
+    {
+        long long res = 1;
+        x = x % p;
+        while (y > 0)
+        {
+            if (y & 1)
+                res = (res * x) % p;
+
+            y = y >> 1;
+            x = (x * x) % p;
+        }
+        return res;
+    }
+
+    bool millerTest(long long d, long long n)
+    {
+        long long a = 2 + rand() % (n - 4);
+
+        long long x = power(a, d, n);
+
+        if (x == 1 || x == n - 1)
+            return true;
+
+        while (d != n - 1)
+        {
+            x = (x * x) % n;
+            d *= 2;
+
+            if (x == 1)
+                return false;
+            if (x == n - 1)
+                return true;
+        }
+
+        return false;
+    }
+
+public:
+    bool isPrimeMillerRobin(long long n, long long k = 50)
+    {
+        if (n <= 1 || n == 4)
+            return false;
+        if (n <= 3)
+            return true;
+
+        long long d = n - 1;
+        while (d % 2 == 0)
+            d /= 2;
+
+        for (long long i = 0; i < k; i++)
+            if (!millerTest(d, n))
+                return false;
+        return true;
+    }
+};
+
+class Solution
+{
+public:
+    int isPrime(int n)
+    {
+        return PrimalityTest().isPrimeMillerRobin(n);
+    }
+};
