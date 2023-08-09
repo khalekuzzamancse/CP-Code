@@ -14,21 +14,21 @@ using namespace std;
 class Integer
 {
 private:
-    long long number;
-    std::string numberAsString;
+    long long _value;
+    std::string stringValue;
 
 public:
     Integer(long long number)
     {
-        this->number = number;
-        numberAsString = std::to_string(number);
+        this->_value = number;
+        stringValue = std::to_string(number);
     }
 
     int long getSumOfDigit()
     {
         int long sum = 0;
-        for (int i = 0; i < numberAsString.length(); i++)
-            sum += numberAsString[i] - '0';
+        for (int i = 0; i < stringValue.length(); i++)
+            sum += stringValue[i] - '0';
         return sum;
     }
 };

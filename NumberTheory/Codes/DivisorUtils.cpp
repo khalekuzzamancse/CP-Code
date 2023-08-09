@@ -274,20 +274,17 @@ public:
             cnt *= (it.exponent + 1);
         return cnt;
     }
-    // long long getSumOfDivisors(int n)
-    // {
-
-    //     auto factors = pf.getPrimeFactorization();
-    //     long long sum = 1;
-    //     for (auto it : factors)
-    //     {
-    //         long long exponent = it.second;
-    //         long long base = it.first;
-    //         long long p = (pow(base, (exponent + 1)) - 1) / (base - 1);
-    //         sum *= p;
-    //     }
-    //     return sum;
-    // }
+    long long getSumOfDivisors()
+    {
+        auto factors = PrimeFactorizer(n).getPrimeFactorizationNaive();
+        long long sum = 1;
+        for (auto it : factors.factors)
+        {
+            long long p = (pow(it.base, (it.exponent + 1)) - 1) / (it.base - 1);
+            sum *= p;
+        }
+        return sum;
+    }
 };
 int main()
 {

@@ -14,18 +14,18 @@ using namespace std;
 class Integer
 {
 private:
-    long long number;
-    std::string numberAsString;
+    long long _value;
+    std::string stringValue;
 
 public:
     Integer(long long number)
     {
-        this->number = number;
-        numberAsString = std::to_string(number);
+        this->_value = number;
+        stringValue = std::to_string(number);
     }
     Integer replaceDigitIf(std::function<int(int digit, int position)> lambda)
     {
-        std::string num = numberAsString;
+        std::string num = stringValue;
         for (int i = 0; i < num.length(); i++)
         {
             int replaceBy = lambda(num[i] - '0', i);
@@ -36,7 +36,7 @@ public:
     }
     long long get()
     {
-        return number;
+        return _value;
     }
 };
 class Solution

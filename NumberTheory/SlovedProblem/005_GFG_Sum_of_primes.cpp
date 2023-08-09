@@ -73,25 +73,25 @@ public:
 class Integer
 {
 private:
-    long long number;
-    std::string numberAsString;
+    long long _value;
+    std::string stringValue;
 
 public:
     Integer(long long number)
     {
-        this->number = number;
-        numberAsString = std::to_string(number);
+        this->_value = number;
+        stringValue = std::to_string(number);
     }
 
     void forEachDigit(std::function<void(int digit, int position)> lambda)
     {
-        for (int i = 0; i < numberAsString.length(); i++)
-            lambda(numberAsString[i] - '0', i);
+        for (int i = 0; i < stringValue.length(); i++)
+            lambda(stringValue[i] - '0', i);
     }
 
     long long get()
     {
-        return number;
+        return _value;
     }
 };
 
