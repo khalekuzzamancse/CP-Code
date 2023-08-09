@@ -264,6 +264,10 @@ public:
             throw std::out_of_range("Invalid Position");
         return data[position];
     }
+    vector<T> get()
+    {
+        return data;
+    }
     T getFirst()
     {
         return data[0];
