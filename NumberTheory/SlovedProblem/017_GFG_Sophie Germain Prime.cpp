@@ -1,7 +1,10 @@
 /*
 Link:
-https:https://practice.geeksforgeeks.org/problems/sophie-germain-prime2014/1?page=1&difficulty[]=-1&status[]=unsolved&category[]=Prime%20Number&category[]=number-theory&sortBy=submissions
+https://practice.geeksforgeeks.org/problems/sophie-germain-prime2014/1?page=1&difficulty[]=-1&status[]=unsolved&category[]=Prime%20Number&category[]=number-theory&sortBy=submissions
 
+Given N find all Sophie Germain Prime numbers less than N . A prime number p is
+called a sophie prime number if 2p+1 is also a prime number.
+ The number 2p+1 is called a safe prime.
 Uses:
 Sieve class
 

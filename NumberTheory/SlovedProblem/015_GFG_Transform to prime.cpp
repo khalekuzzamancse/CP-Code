@@ -1,7 +1,8 @@
 /*
 Link:
 https://practice.geeksforgeeks.org/problems/transform-to-prime4635/1?page=1&difficulty[]=-1&status[]=unsolved&category[]=Prime%20Number&category[]=number-theory&sortBy=submissions
-
+Given an array of n integers. Find the minimum positive number to be inserted in array, so that sum of all elements of
+ array becomes prime. If sum is already prime, then return 0.
 Uses:
 Sieve class
 

@@ -1,7 +1,9 @@
 /*
 Link:
-https:https://practice.geeksforgeeks.org/problems/prime-palindrome-sum3700/1?page=1&difficulty[]=-1&status[]=unsolved&category[]=Prime%20Number&category[]=number-theory&sortBy=submissions
+https://practice.geeksforgeeks.org/problems/prime-palindrome-sum3700/1?page=1&difficulty[]=-1&status[]=unsolved&category[]=Prime%20Number&category[]=number-theory&sortBy=submissions
 
+Given is a range of integers [a , b]  . You have to find the sum of all the 
+numbers in the range  [a , b] that are prime as well as palindrome.
 Uses:
 Sieve class
 Integer class
