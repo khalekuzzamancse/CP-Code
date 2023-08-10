@@ -1,32 +1,20 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <functional>
 using namespace std;
 
 class Sieve
 {
+
+    // Generating Primes
 private:
-    const static int mx = 1e2 + 5;
+    const static int mx = 1e5;
     static bool primeContainer[mx + 1];
-    static vector<int> primes;
     bool alreadyPrimeGenerated = false;
-    bool alreadyPrimeCollected = false;
-    const bool cross = true;
-    const bool notCross = false;
+    const bool cross = true, notCross = false;
 
 private:
-    void collectPrimes()
-    {
-        if (alreadyPrimeCollected)
-            return;
-        primes.push_back(2);
-        for (int i = 3; i <= mx; i += 2)
-        {
-            if (primeContainer[i] == notCross)
-                primes.push_back(i);
-        }
-        alreadyPrimeCollected = true;
-    }
     void crossMultipleOf(int i)
     {
         for (int multiple = i * i; multiple <= mx; multiple += i)
@@ -48,21 +36,57 @@ private:
         alreadyPrimeGenerated = true;
     }
 
-public:
-    Sieve()
+private:
+    // collecting primes
+    static vector<int> primes;
+    bool alreadyPrimeCollected = false;
+    void collectPrimes()
     {
-        generatePrimesSieve();
+        if (alreadyPrimeCollected)
+            return;
+        primes.push_back(2);
+        for (int i = 3; i <= mx; i += 2)
+        {
+            if (primeContainer[i] == notCross)
+                primes.push_back(i);
+        }
+        alreadyPrimeCollected = true;
     }
 
+public:
+    vector<int> getPrimes(int a, int b)
+    {
+        vector<int> primes;
+        for (int i = a; i <= b; i++)
+            if (isPrime(i))
+                primes.push_back(i);
+
+        return primes;
+    }
     vector<int> &getPrimes()
     {
         collectPrimes();
         return primes;
     }
+    void toString()
+    {
+        collectPrimes();
+        for (int it : primes)
+            cout << it << " ";
+        cout << endl;
+    }
+
+public:
+    // constructor
+    Sieve()
+    {
+        generatePrimesSieve();
+    }
+
+public:
     bool isPrime(int number)
     {
         // Time complexity: O(1)
-
         return primeContainer[number] == notCross;
     }
     int getNextPrime(int number)
@@ -83,24 +107,14 @@ public:
         }
         return 0;
     }
-    vector<int> getPrimes(int a, int b)
-    {
-        vector<int> primes;
-        for (int i = a; i <= b; i++)
-            if (isPrime(i))
-                primes.push_back(i);
 
-        return primes;
-    }
-    void toString()
+    void forEachPrime(std::function<void(int prime)> lambda, int l = 2, int r = mx)
     {
-        collectPrimes();
-        for (int it : primes)
-            cout << it << " ";
-        cout << endl;
+        for (int number = l; number <= r; number++)
+            if (isPrime(number))
+                lambda(number);
     }
 };
-// Define the static vectors
 vector<int> Sieve::primes;
 bool Sieve::primeContainer[];
 
@@ -113,6 +127,9 @@ int main()
 
     // PrimalityTest t = PrimalityTest();
     // cout << t.isPrimeMillerRobin(11) << endl;
+    s.forEachPrime([](int prime)
+                   { cout << prime << endl; },
+                   2, 40);
 
     return 0;
 }

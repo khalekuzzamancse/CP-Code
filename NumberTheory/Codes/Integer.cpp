@@ -289,6 +289,13 @@ public:
         }
         return res;
     }
+    int frequencyOf(int digit){
+        int count = 0;
+        for (int i = 0; i < stringValue.length(); i++)
+            if (stringValue[i] == digit + '0')
+                count++;
+        return count;
+    }
 };
 
 /*

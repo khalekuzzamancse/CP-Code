@@ -285,6 +285,7 @@ public:
         }
         return sum;
     }
+    //get all the divisor
     //getTotal Exponent
 };
 int main()

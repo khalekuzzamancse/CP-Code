@@ -2,38 +2,30 @@
 Link:https://practice.geeksforgeeks.org/problems/primes-sum5827/1?page=1&difficulty[]=0&category[]=Prime%20Number&category[]=number-theory&sortBy=submissions
 
 
+        // n=x+y
+        // x is prime that means ,y=n-x should be prime
+
+        Given a number N. Find if it can be expressed as sum of two prime numbers.
 
 */
 
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <functional>
 using namespace std;
 
 class Sieve
 {
+
+    // Generating Primes
 private:
     const static int mx = 1e5;
     static bool primeContainer[mx + 1];
-    static vector<int> primes;
     bool alreadyPrimeGenerated = false;
-    bool alreadyPrimeCollected = false;
-    const bool cross = true;
-    const bool notCross = false;
+    const bool cross = true, notCross = false;
 
 private:
-    void collectPrimes()
-    {
-        if (alreadyPrimeCollected)
-            return;
-        primes.push_back(2);
-        for (int i = 3; i <= mx; i += 2)
-        {
-            if (primeContainer[i] == notCross)
-                primes.push_back(i);
-        }
-        alreadyPrimeCollected = true;
-    }
     void crossMultipleOf(int i)
     {
         for (int multiple = i * i; multiple <= mx; multiple += i)
@@ -56,40 +48,19 @@ private:
     }
 
 public:
+    // constructor
     Sieve()
     {
         generatePrimesSieve();
     }
 
-    vector<int> &getPrimes()
-    {
-        collectPrimes();
-        return primes;
-    }
+public:
     bool isPrime(int number)
     {
         // Time complexity: O(1)
-
         return primeContainer[number] == notCross;
     }
-    int getNextPrime(int number)
-    {
-        for (int i = number; i <= mx; ++i)
-        {
-            if (isPrime(i))
-                return i;
-        }
-        return 0;
-    }
-    int getPrevPrime(int number)
-    {
-        for (int i = number; i >= 2; --i)
-        {
-            if (isPrime(i))
-                return i;
-        }
-        return 0;
-    }
+
     vector<int> getPrimes(int a, int b)
     {
         vector<int> primes;
@@ -99,16 +70,7 @@ public:
 
         return primes;
     }
-    void toString()
-    {
-        collectPrimes();
-        for (int it : primes)
-            cout << it << " ";
-        cout << endl;
-    }
 };
-// Define the static vectors
-vector<int> Sieve::primes;
 bool Sieve::primeContainer[];
 class Solution
 {
@@ -116,20 +78,17 @@ class Solution
 public:
     string isSumOfTwo(int n)
     {
-        Sieve s = Sieve();
         if (n < 4)
             return "No";
-        if (n == 4)
-            return "Yes";
-        bool isOdd = n % 2 == 1;
-        if (isOdd && s.isPrime(n - 2))
-            return "Yes";
-        else
-            return "No";
-        bool isEven = n % 2 == 0;
-        if (isEven)
+        Sieve s = Sieve();
+        int half = n / 2;
+        for (int it : s.getPrimes(2, half))
         {
+            int y = n - it;
+            if (s.isPrime(y))
+                return "Yes";
         }
+        return "No";
     }
 };
 
