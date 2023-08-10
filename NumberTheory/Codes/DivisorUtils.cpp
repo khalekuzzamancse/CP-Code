@@ -285,6 +285,7 @@ public:
         }
         return sum;
     }
+    //getTotal Exponent
 };
 int main()
 {
