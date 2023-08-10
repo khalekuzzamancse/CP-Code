@@ -148,7 +148,7 @@ public:
 class Solution
 {
 public:
-    long long int divSum(long long int n)
+    long long int sumOfDivisors(int n)
     {
         return DivisorUtils(n).getSumOfDivisors() - n;
     }
@@ -160,7 +160,7 @@ int main()
     long long int a;
     cin >> a;
     Solution ob;
-    cout << ob.divSum(a) << endl;
+    cout << ob.sumOfDivisors(a) << endl;
 
     return 0;
 }

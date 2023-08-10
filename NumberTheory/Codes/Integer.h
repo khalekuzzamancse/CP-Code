@@ -278,6 +278,17 @@ public:
 
         return true;
     }
+    std::vector<long long> rotate()
+    {
+        std::vector<long long> res;
+        std::string s = stringValue;
+        for (int i = 0; i < s.size(); i++)
+        {
+            std::string t = s.substr(i) + s.substr(0, i);
+            res.push_back(stoll(t));
+        }
+        return res;
+    }
 };
 
 /*
