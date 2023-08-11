@@ -18,7 +18,7 @@ template <typename T>
 class Vector
 {
 private:
-    std::vector<T> data;
+    std::vector<T> elements;
     bool isOutOfBound(int position)
     {
         return position < 0 || position > getLastIndex();
@@ -31,8 +31,8 @@ private:
             end = getLastIndex();
         if (isOutOfBound(start) || isOutOfBound(end) || start > end)
             throw std::out_of_range("Invalid range");
-        auto it_start = this->data.begin();
-        auto it_end = this->data.begin();
+        auto it_start = this->elements.begin();
+        auto it_end = this->elements.begin();
         std::advance(it_start, start);
         std::advance(it_end, end + 1);
         return std::make_pair(it_start, it_end);
@@ -45,7 +45,7 @@ public:
     }
     Vector(vector<T> &v)
     {
-        this->data = v;
+        this->elements = v;
     }
 
     void removeDuplicate(int start = 0, int end = -1)
@@ -57,15 +57,15 @@ public:
         {
             return !s.insert(x).second;
         };
-        this->data.erase(std::remove_if(range.first, range.second, is_duplicate), range.second);
+        this->elements.erase(std::remove_if(range.first, range.second, is_duplicate), range.second);
     }
     vector<T> get()
     {
-        return data;
+        return elements;
     }
     size_t getLastIndex()
     {
-        return this->data.size() - 1;
+        return this->elements.size() - 1;
     }
 };
 

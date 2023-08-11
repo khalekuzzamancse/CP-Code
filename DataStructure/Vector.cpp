@@ -9,7 +9,10 @@ template <typename T>
 class Vector
 {
 private:
-    std::vector<T> data;
+    const static int INVALID_INDEX = -1;
+
+private:
+    std::vector<T> elements;
     bool isOutOfBound(int position)
     {
         return position < 0 || position > getLastIndex();
@@ -18,26 +21,20 @@ private:
               typename std::vector<T>::iterator>
     getRange(int start, int end)
     {
-        if (end == -1)
+        if (end == INVALID_INDEX)
             end = getLastIndex();
         if (isOutOfBound(start) || isOutOfBound(end) || start > end)
             throw std::out_of_range("Invalid range");
-        auto it_start = this->data.begin();
-        auto it_end = this->data.begin();
-        std::advance(it_start, start);
-        std::advance(it_end, end + 1);
+        auto it_start = elements.begin();
+        auto it_end = elements.begin();
+        std::advance(it_start, start), std::advance(it_end, end + 1);
         return std::make_pair(it_start, it_end);
     }
 
 public:
-    // Constructors
-    Vector()
-    {
-    }
-    Vector(vector<T> &v)
-    {
-        this->data = v;
-    }
+    Vector() = default;
+    Vector(const std::vector<T> &v) : elements(v) {}
+    Vector(std::vector<T> &&v) : elements(std::move(v)) {}
     Vector(int inputSize)
     {
         while (inputSize--)
@@ -51,19 +48,19 @@ public:
     // adding elements
     void pushBack(const T &value)
     {
-        data.push_back(value);
+        elements.push_back(value);
     }
     void pushFront(const T &value)
     {
-        this->data.insert(this->data.begin(), value);
+        elements.insert(elements.begin(), value);
     }
     void insertAt(T value, size_t position)
     {
         if (isOutOfBound(position))
             return;
-        auto it = this->data.begin();
+        auto it = elements.begin();
         advance(it, position);
-        this->data.insert(it, value);
+        elements.insert(it, value);
     }
 
     // Removing elements
@@ -71,30 +68,30 @@ public:
     void removeFirst()
     {
         if (isNotEmpty())
-            this->data.erase(this->data.begin());
+            this->elements.erase(this->elements.begin());
     }
     void removeLast()
     {
         if (isNotEmpty())
-            this->data.pop_back();
+            this->elements.pop_back();
     }
     void removeAt(size_t position)
     {
         if (isOutOfBound(position))
             return;
-        auto it = this->data.begin();
+        auto it = this->elements.begin();
         advance(it, position);
-        this->data.erase(it);
+        this->elements.erase(it);
     }
     void remove(const T &value, int start = 0, int end = -1)
     {
         auto range = getRange(start, end);
-        this->data.erase(std::remove(range.first, range.second, value), range.second);
+        this->elements.erase(std::remove(range.first, range.second, value), range.second);
     }
     void removeIf(std::function<bool(const T &)> predicate, int start = 0, int end = -1)
     {
         auto range = getRange(start, end);
-        this->data.erase(std::remove_if(range.first, range.second, predicate), range.second);
+        this->elements.erase(std::remove_if(range.first, range.second, predicate), range.second);
     }
     void removeDuplicate(int start = 0, int end = -1)
     {
@@ -105,7 +102,7 @@ public:
         {
             return !s.insert(x).second;
         };
-        this->data.erase(std::remove_if(range.first, range.second, is_duplicate), range.second);
+        this->elements.erase(std::remove_if(range.first, range.second, is_duplicate), range.second);
     }
     // Diffiererent finding methods
     int find(const T &value, int start = 0, int end = -1)
@@ -182,7 +179,7 @@ public:
     {
         auto range = getRange(start, end);
         auto it_max = std::max_element(range.first, range.second);
-        int pos = std::distance(this->data.begin(), it_max);
+        int pos = std::distance(this->elements.begin(), it_max);
         return make_pair(*it_max, pos);
     }
 
@@ -190,7 +187,7 @@ public:
     {
         auto range = getRange(start, end);
         auto it_min = std::min_element(range.first, range.second);
-        int pos = std::distance(this->data.begin(), it_min);
+        int pos = std::distance(this->elements.begin(), it_min);
         return make_pair(*it_min, pos);
     }
     // ForEachIndexed
@@ -220,7 +217,7 @@ public:
     Vector<T> map(std::function<T(T)> transformFunction) const
     {
         vector<T> result;
-        for (const T &element : data)
+        for (const T &element : elements)
             result.insert(result.end(), transformFunction(element));
         return Vector(result);
     }
@@ -244,13 +241,13 @@ public:
 
     size_t getLastIndex()
     {
-        return this->data.size() - 1;
+        return this->elements.size() - 1;
     }
 
     // Empty or Not
     bool isEmpty()
     {
-        return this->data.empty();
+        return this->elements.empty();
     }
     bool isNotEmpty()
     {
@@ -262,24 +259,24 @@ public:
     {
         if (isOutOfBound(position))
             throw std::out_of_range("Invalid Position");
-        return data[position];
+        return elements[position];
     }
     vector<T> get()
     {
-        return data;
+        return elements;
     }
     T getFirst()
     {
-        return data[0];
+        return elements[0];
     }
     T getLast()
     {
-        return data[size() - 1];
+        return elements[size() - 1];
     }
 
     int size()
     {
-        return data.size();
+        return elements.size();
     }
 
     void toString(string separator = " ")
@@ -287,14 +284,14 @@ public:
         if (isEmpty())
             return;
         for (int i = 0; i < size() - 1; i++)
-            cout << data[i] << separator;
-        cout << data[data.size() - 1];
+            cout << elements[i] << separator;
+        cout << elements[elements.size() - 1];
         cout << endl;
         return;
     }
     // sorting
     // sorting comparator
-   void sort(
+    void sort(
         int start = 0, int end = -1, std::function<bool(const T &, const T &)> comparator = [](const T &a, const T &b)
                                      { return a < b; })
     {

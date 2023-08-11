@@ -5,7 +5,7 @@ template <typename T>
 class Vector
 {
 private:
-    std::vector<T> data;
+    std::vector<T> elements;
     bool isOutOfBound(int position)
     {
         return position < 0 || position > getLastIndex();
@@ -18,8 +18,8 @@ private:
             end = getLastIndex();
         if (isOutOfBound(start) || isOutOfBound(end) || start > end)
             throw std::out_of_range("Invalid range");
-        auto it_start = this->data.begin();
-        auto it_end = this->data.begin();
+        auto it_start = this->elements.begin();
+        auto it_end = this->elements.begin();
         std::advance(it_start, start);
         std::advance(it_end, end + 1);
         return std::make_pair(it_start, it_end);
@@ -43,31 +43,31 @@ public:
 
     void pushBack(const T &value)
     {
-        data.push_back(value);
+        value.push_back(value);
     }
 
     size_t getLastIndex()
     {
-        return this->data.size() - 1;
+        return this->elements.size() - 1;
     }
 
     bool isEmpty()
     {
-        return this->data.empty();
+        return this->elements.empty();
     }
 
     vector<T> get()
     {
-        return data;
+        return elements;
     }
     T getLast()
     {
-        return data[size() - 1];
+        return elements[size() - 1];
     }
 
     int size()
     {
-        return data.size();
+        return elements.size();
     }
 
     void toString(string separator = " ")
@@ -75,8 +75,8 @@ public:
         if (isEmpty())
             return;
         for (int i = 0; i < size() - 1; i++)
-            cout << data[i] << separator;
-        cout << data[data.size() - 1];
+            cout << elements[i] << separator;
+        cout << elements[elements.size() - 1];
         cout << endl;
         return;
     }
@@ -93,7 +93,7 @@ public:
     {
         if (isOutOfBound(position))
             throw std::out_of_range("Invalid Position");
-        return data[position];
+        return elements[position];
     }
 };
 int main()
