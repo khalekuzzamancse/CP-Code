@@ -8,11 +8,11 @@ using namespace std;
 template <typename T>
 class Vector
 {
-private:
+public:
     const static int INVALID_INDEX = -1;
 
 private:
-    std::vector<T> elements;
+    std::vector<T> _elements;
     bool isOutOfBound(int position)
     {
         return position < 0 || position > getLastIndex();
@@ -25,16 +25,16 @@ private:
             end = getLastIndex();
         if (isOutOfBound(start) || isOutOfBound(end) || start > end)
             throw std::out_of_range("Invalid range");
-        auto it_start = elements.begin();
-        auto it_end = elements.begin();
+        auto it_start = _elements.begin();
+        auto it_end = _elements.begin();
         std::advance(it_start, start), std::advance(it_end, end + 1);
         return std::make_pair(it_start, it_end);
     }
 
 public:
     Vector() = default;
-    Vector(const std::vector<T> &v) : elements(v) {}
-    Vector(std::vector<T> &&v) : elements(std::move(v)) {}
+    Vector(const std::vector<T> &v) : _elements(v) {}
+    Vector(std::vector<T> &&v) : _elements(std::move(v)) {}
     Vector(int inputSize)
     {
         while (inputSize--)
@@ -44,54 +44,98 @@ public:
             pushBack(x);
         }
     }
+    // Operator overloaded
+public:
+    T &operator[](size_t index)
+    {
+        if (isOutOfBound(index))
+            throw std::out_of_range("Index out of bounds");
+        return _elements[index];
+    }
+    Vector &operator=(const Vector &other)
+    {
+        if (this != &other)
+            _elements = other._elements;
+        return *this;
+    }
+    bool operator!=(const Vector &other) const
+    {
+        return _elements != other._elements;
+    }
+    bool operator==(const Vector &other) const
+    {
+        return _elements == other._elements;
+    }
+    // Compulsory
+    size_t getLastIndex()
+    {
+        return this->_elements.size() - 1;
+    }
 
-    // adding elements
+    // Empty or Not
+    bool isEmpty()
+    {
+        return this->_elements.empty();
+    }
+    bool isNotEmpty()
+    {
+        return !isEmpty();
+    }
+    int size()
+    {
+        return _elements.size();
+    }
+
+public:
+    // Adding elements
+public:
     void pushBack(const T &value)
     {
-        elements.push_back(value);
+        _elements.push_back(value);
     }
     void pushFront(const T &value)
     {
-        elements.insert(elements.begin(), value);
+        _elements.insert(_elements.begin(), value);
     }
     void insertAt(T value, size_t position)
     {
         if (isOutOfBound(position))
             return;
-        auto it = elements.begin();
+        auto it = _elements.begin();
         advance(it, position);
-        elements.insert(it, value);
+        _elements.insert(it, value);
     }
 
     // Removing elements
     //  removing elements
+public:
     void removeFirst()
     {
         if (isNotEmpty())
-            this->elements.erase(this->elements.begin());
+            this->_elements.erase(this->_elements.begin());
     }
     void removeLast()
     {
         if (isNotEmpty())
-            this->elements.pop_back();
+            this->_elements.pop_back();
     }
     void removeAt(size_t position)
     {
         if (isOutOfBound(position))
             return;
-        auto it = this->elements.begin();
+        auto it = this->_elements.begin();
         advance(it, position);
-        this->elements.erase(it);
+        this->_elements.erase(it);
     }
     void remove(const T &value, int start = 0, int end = -1)
     {
         auto range = getRange(start, end);
-        this->elements.erase(std::remove(range.first, range.second, value), range.second);
+        this->_elements.erase(std::remove(range.first, range.second, value), range.second);
     }
     void removeIf(std::function<bool(const T &)> predicate, int start = 0, int end = -1)
     {
         auto range = getRange(start, end);
-        this->elements.erase(std::remove_if(range.first, range.second, predicate), range.second);
+        this->_elements.erase(std::remove_if(range.first, range.second, predicate), range.second);
     }
     void removeDuplicate(int start = 0, int end = -1)
     {
@@ -102,7 +146,7 @@ public:
         {
             return !s.insert(x).second;
         };
-        this->elements.erase(std::remove_if(range.first, range.second, is_duplicate), range.second);
+        this->_elements.erase(std::remove_if(range.first, range.second, is_duplicate), range.second);
     }
     // Diffiererent finding methods
     int find(const T &value, int start = 0, int end = -1)
@@ -175,23 +219,23 @@ public:
     // Minimum and maximum values
     // These methods have default paramter implementations
 
-    pair<T, int> max(int start = 0, int end = -1)
+    pair<T, int> max(int start = 0, int end = INVALID_INDEX)
     {
         auto range = getRange(start, end);
         auto it_max = std::max_element(range.first, range.second);
-        int pos = std::distance(this->elements.begin(), it_max);
+        int pos = std::distance(_elements.begin(), it_max);
         return make_pair(*it_max, pos);
     }
 
-    pair<T, int> min(int start = 0, int end = -1)
+    pair<T, int> min(int start = 0, int end = INVALID_INDEX)
     {
         auto range = getRange(start, end);
         auto it_min = std::min_element(range.first, range.second);
-        int pos = std::distance(this->elements.begin(), it_min);
+        int pos = std::distance(_elements.begin(), it_min);
         return make_pair(*it_min, pos);
     }
     // ForEachIndexed
-    void forEach(std::function<void(size_t, const T &)> func, int start = 0, int end = -1)
+    void forEach(std::function<void(size_t, const T &)> func, int start = 0, int end = INVALID_INDEX)
     {
         auto range = getRange(start, end);
         size_t i = 0;
@@ -201,15 +245,17 @@ public:
             i++;
         }
     }
-    void forEachReverse(std::function<void(size_t, const T &)> func, int end = -1, int start = 0)
+    void forEachReverse(std::function<void(size_t index, const T &value, bool &stop)> callback, size_t step = 2, int startIndex = 0, int endIndex = INVALID_INDEX)
     {
-        auto range = getRange(start, end);
-        size_t i = 0;
-        // use reverse_iterator to wrap the normal iterators
-        for (auto it = std::reverse_iterator(range.second); it != std::reverse_iterator(range.first); ++it)
+        auto range = getRange(startIndex, endIndex);
+        std::size_t index = size() - 1;
+        bool stop = false;
+        for (auto it = std::reverse_iterator(range.second); it != std::reverse_iterator(range.first); it = it + step)
         {
-            func(i, *it);
-            i++;
+            callback(index, *it, stop);
+            if (stop)
+                break;
+            index = index - step;
         }
     }
 
@@ -217,7 +263,7 @@ public:
     Vector<T> map(std::function<T(T)> transformFunction) const
     {
         vector<T> result;
-        for (const T &element : elements)
+        for (const T &element : _elements)
             result.insert(result.end(), transformFunction(element));
         return Vector(result);
     }
@@ -239,44 +285,21 @@ public:
     }
     //
 
-    size_t getLastIndex()
-    {
-        return this->elements.size() - 1;
-    }
-
-    // Empty or Not
-    bool isEmpty()
-    {
-        return this->elements.empty();
-    }
-    bool isNotEmpty()
-    {
-        return !isEmpty();
-    }
-
-    // Getters
-    T get(size_t position)
-    {
-        if (isOutOfBound(position))
-            throw std::out_of_range("Invalid Position");
-        return elements[position];
-    }
     vector<T> get()
     {
-        return elements;
+        return _elements;
     }
     T getFirst()
     {
-        return elements[0];
+        if (isEmpty())
+            throw std::out_of_range("Vector is empty");
+        return _elements[0];
     }
     T getLast()
     {
-        return elements[size() - 1];
-    }
-
-    int size()
-    {
-        return elements.size();
+        if (isEmpty())
+            throw std::out_of_range("Vector is empty");
+        return _elements[size() - 1];
     }
 
     void toString(string separator = " ")
@@ -284,39 +307,39 @@ public:
         if (isEmpty())
             return;
         for (int i = 0; i < size() - 1; i++)
-            cout << elements[i] << separator;
-        cout << elements[elements.size() - 1];
+            cout << _elements[i] << separator;
+        cout << _elements[_elements.size() - 1];
         cout << endl;
         return;
     }
-    // sorting
-    // sorting comparator
+
     void sort(
-        int start = 0, int end = -1, std::function<bool(const T &, const T &)> comparator = [](const T &a, const T &b)
-                                     { return a < b; })
+        int start = 0, int end = INVALID_INDEX, std::function<bool(const T &, const T &)> comparator = [](const T &a, const T &b)
+                                                { return a < b; })
     {
         auto range = getRange(start, end);
         std::sort(range.first, range.second, comparator);
     }
 };
-void printElement(const int &element)
-{
-    cout << element << " ";
-}
-int squre(const int &element)
-{
-    return element * element;
-}
+
 int main()
 {
+
+  
+
+
+
     Vector<int> v;
-    v.pushBack(1);
-    v.pushBack(2);
-    v.pushBack(3);
-    v.pushFront(10);
-    v.pushFront(20);
-    v.insertAt(10, 4);
-    v.toString();
+    // v.pushBack(1);
+    // v.pushBack(2);
+    // v.pushBack(3);
+    // v.pushFront(10);
+    // v.pushFront(20);
+    // v.insertAt(10, 4);
+    // v.toString();
+    // v.forEachReverse([](size_t i, int value, bool &stop)
+    //                  { cout << i << ":" << value << endl; });
+
     // v.removeFirst();
     // v.removeLast();
     // v.removeAt(2);
