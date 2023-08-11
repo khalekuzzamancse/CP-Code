@@ -84,19 +84,21 @@ public:
         lastRoundedPosition = s.length() - 1;
     }
 
+    void round()
+    {
+        int k = findK();
+        if (k == -2)
+            return;
+        if (k == -1)
+            s = '1' + s, k = 0, lastRoundedPosition = k;
+        else
+            s[k] = s[k] + 1, lastRoundedPosition = k;
+        round();
+    }
+
     void solve()
     {
-        int k = -1;
-        while (k != -2)
-        {
-            int k = findK();
-            if (k == -2)
-                break;
-            if (k == -1)
-                s = '1' + s, k = 0, lastRoundedPosition = k;
-            else
-                s[k] = s[k] + 1, lastRoundedPosition = k;
-        }
+        round();
         replaceWithZero(lastRoundedPosition);
         cout << s << endl;
     }

@@ -294,17 +294,12 @@ public:
     }
     // sorting
     // sorting comparator
-    void sort(std::function<bool(const T &, const T &)> comparator = [](const T &a, const T &b)
-              { return a < b; })
-    {
-        this->data.sort(comparator);
-    }
-    void sortRange(
-        int start, int end, std::function<bool(const T &, const T &)> comparator = [](const T &a, const T &b)
-                            { return a < b; })
+   void sort(
+        int start = 0, int end = -1, std::function<bool(const T &, const T &)> comparator = [](const T &a, const T &b)
+                                     { return a < b; })
     {
         auto range = getRange(start, end);
-        this->data.sort(range.first, range.second, comparator);
+        std::sort(range.first, range.second, comparator);
     }
 };
 void printElement(const int &element)
