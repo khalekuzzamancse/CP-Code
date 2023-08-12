@@ -235,17 +235,30 @@ public:
         return make_pair(*it_min, pos);
     }
     // ForEachIndexed
-    void forEach(std::function<void(size_t, const T &)> func, int start = 0, int end = INVALID_INDEX)
+    // void forEach(std::function<void(size_t, const T &)> func, int start = 0, int end = INVALID_INDEX)
+    // {
+    //     auto range = getRange(start, end);
+    //     size_t i = 0;
+    //     for (auto it = range.first; it != range.second; ++it)
+    //     {
+    //         func(i, *it);
+    //         i++;
+    //     }
+    // }
+    void forEach(std::function<void(size_t index, const T &value, bool &stop)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
     {
-        auto range = getRange(start, end);
-        size_t i = 0;
+        auto range = getRange(startIndex, endIndex);
+        size_t index = 0;
+        bool stop = false;
         for (auto it = range.first; it != range.second; ++it)
         {
-            func(i, *it);
-            i++;
+            callback(index, *it, stop);
+            if (stop)
+                break;
+            index++;
         }
     }
-    void forEachReverse(std::function<void(size_t index, const T &value, bool &stop)> callback, size_t step = 2, int startIndex = 0, int endIndex = INVALID_INDEX)
+    void forEachReverse(std::function<void(size_t index, const T &value, bool &stop)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
     {
         auto range = getRange(startIndex, endIndex);
         std::size_t index = size() - 1;
@@ -325,20 +338,18 @@ public:
 int main()
 {
 
-  
-
-
-
     Vector<int> v;
-    // v.pushBack(1);
-    // v.pushBack(2);
-    // v.pushBack(3);
-    // v.pushFront(10);
-    // v.pushFront(20);
-    // v.insertAt(10, 4);
-    // v.toString();
+    v.pushBack(1);
+    v.pushBack(2);
+    v.pushBack(3);
+    v.pushFront(10);
+    v.pushFront(20);
+    v.insertAt(10, 4);
+    v.toString();
     // v.forEachReverse([](size_t i, int value, bool &stop)
     //                  { cout << i << ":" << value << endl; });
+       v.forEach([](size_t i, int value, bool &stop)
+                     { cout << i << ":" << value << endl; });
 
     // v.removeFirst();
     // v.removeLast();
