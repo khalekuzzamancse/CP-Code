@@ -1,3 +1,5 @@
+
+using namespace std;
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -94,26 +96,18 @@ public:
         _elements.push_back(value);
     }
 
-    pair<T, int> max(int start = 0, int end = INVALID_INDEX)
+    //
+
+    vector<T> get()
     {
-        auto range = getRange(start, end);
-        auto it_max = std::max_element(range.first, range.second);
-        int pos = std::distance(_elements.begin(), it_max);
-        return make_pair(*it_max, pos);
+        return _elements;
     }
 
-    void forEach(std::function<void(size_t index, const T &value, bool &stop)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
+    T getLast()
     {
-        auto range = getRange(startIndex, endIndex);
-        size_t index = 0;
-        bool stop = false;
-        for (auto it = range.first; it != range.second; ++it)
-        {
-            callback(index, *it, stop);
-            if (stop)
-                break;
-            index++;
-        }
+        if (isEmpty())
+            throw std::out_of_range("Vector is empty");
+        return _elements[size() - 1];
     }
 
     void toString(string separator = " ")
@@ -126,61 +120,56 @@ public:
         cout << endl;
         return;
     }
+    void removeLast()
+    {
+        if (isNotEmpty())
+            this->_elements.pop_back();
+    }
+
+    void sort(
+        int start = 0, int end = INVALID_INDEX, std::function<bool(const T &, const T &)> comparator = [](const T &a, const T &b)
+                                                { return a < b; })
+    {
+        auto range = getRange(start, end);
+        std::sort(range.first, range.second, comparator);
+    }
 };
+
 class Solution
 {
-    Vector<int> v;
-    int n, k;
-    int findMaxPos()
+    Vector<int> a, b;
+    void makeB()
     {
-        int pos = -1, mx = -1;
-        for (int i = 0; i <= n - 2; i++)
+        int last = a.getLast();
+        while (a.isNotEmpty() && a.getLast() == last)
         {
-            if (v[i] <= v[i + 1] && v[i] > mx)
-                mx = v[i], pos = i;
+            b.pushBack(last);
+            a.removeLast();
         }
-        return pos;
-    }
-    int difference(int i)
-    {
-        return v[i + 1] - v[i];
-    }
-    int incPossible(int diff, int k)
-    {
-        return min(diff, k);
-    }
-    int updatedK(int k, int inc)
-    {
-        return k - inc;
     }
 
 public:
     Solution()
     {
-
-        cin >> n >> k;
-        v = Vector<int>(n);
+        int n;
+        cin >> n;
+        a = Vector<int>(n);
+        a.sort();
     }
     void solve()
     {
 
-        while (k > 0)
+        makeB();
+        if (a.isEmpty())
+            cout << -1 << endl;
+        else if (b.isEmpty())
+            cout << -1 << endl;
+        else
         {
-            v.toString();
-            int pos = findMaxPos();
-            if (pos != -1)
-            {
-                int d = difference(pos);
-                int inc = incPossible(d, k);
-
-                cout << "d: " << d << " inc :" << inc << " k " << k << endl;
-                cout << v[pos] << " " << pos + 1 << endl;
-                v[pos] += inc;
-                k = updatedK(k, inc);
-            }
+            cout << a.size() << " " << b.size() << endl;
+            a.toString();
+            b.toString();
         }
-        v.toString();
-        cout << v.max().first << endl;
     }
 };
 int main()
