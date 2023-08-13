@@ -231,15 +231,24 @@ public:
     pair<T, int> secondMin(int startIndex = 0, int endIndex = INVALID_INDEX)
     {
         auto range = getRange(startIndex, endIndex);
-        T firstMin = *range.first, secondMin = *range.first;
-        int firstMinPos = 0, secondMinPos = 0;
+        T firstMin = *range.first;
+        T secondMin = std::numeric_limits<T>::max();
+        int firstMinPos = 0;
+        int secondMinPos = 0;
         for (auto it = range.first; it != range.second; ++it)
         {
             if (*it < firstMin)
-                secondMin = firstMin, secondMinPos = firstMinPos, firstMin = *it,
+            {
+                secondMin = firstMin;
+                secondMinPos = firstMinPos;
+                firstMin = *it;
                 firstMinPos = std::distance(range.first, it);
+            }
             else if (*it < secondMin && *it != firstMin)
-                secondMin = *it, secondMinPos = std::distance(range.first, it);
+            {
+                secondMin = *it;
+                secondMinPos = std::distance(range.first, it);
+            }
         }
         return make_pair(secondMin, secondMinPos);
     }
@@ -271,8 +280,43 @@ public:
         return make_pair(secondMax, secondMaxPos);
     }
 
+private: // finding nTh max or element O(nlogn),then O(1) for each query.
+    vector<pair<T, int>> max_min;
+    bool isAllMin_MAX_Calculated = false;
 
-    // -------------END!!----------
+private:
+    //..................N th MAX MIN ...
+    void calculateAllMaxMin()
+    {
+        if (isAllMin_MAX_Calculated)
+            return;
+        vector<pair<T, int>> v;
+        for (int i = 0; i < _elements.size(); ++i)
+            v.emplace_back(_elements[i], i);
+        std::sort(v.begin(), v.end());
+        pair<T, int> last = v[0];
+        max_min.push_back(last);
+        for (int i = 1; i < v.size(); i++)
+            if (v[i].first != last.first)
+                max_min.push_back(v[i]), last = v[i];
+        isAllMin_MAX_Calculated = true;
+    }
+    //..................N th MAX MIN ...
+    //..................N th MAX MIN ...
+public:
+    pair<T, int> nThMin(int n)
+    {
+        calculateAllMaxMin();
+        return max_min[n - 1];
+    }
+    pair<T, int> nThMax(int n)
+    {
+        calculateAllMaxMin();
+        int pos = max_min.size() - n;
+        return max_min[pos];
+    }
+
+    // ................END............
 
     void forEach(std::function<void(size_t index, const T &value, bool &stop)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
     {
@@ -368,14 +412,17 @@ int main()
 {
 
     Vector<int> v;
-    v.pushBack(1);
+    // v.pushBack(1);
+    // v.pushBack(2);
+    // v.pushBack(3);
+    // v.pushFront(10);
+    // v.pushFront(20);
+    // v.insertAt(10, 4);
     v.pushBack(2);
-    v.pushBack(3);
-    v.pushFront(10);
-    v.pushFront(20);
-    v.insertAt(10, 4);
+    v.pushBack(9);
     v.toString();
-    cout << v.secondMax(2, 5).first << endl;
+    cout << v.secondMin().first << endl;
+
     // v.forEachReverse([](size_t i, int value, bool &stop)
     //                  { cout << i << ":" << value << endl; });
     // v.forEach([](size_t i, int value, bool &stop)
