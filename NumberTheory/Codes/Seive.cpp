@@ -4,7 +4,7 @@
 #include <functional>
 using namespace std;
 
-class Sieve
+class PrimesUptoN
 {
 
     // Generating Primes
@@ -78,7 +78,7 @@ public:
 
 public:
     // constructor
-    Sieve()
+    PrimesUptoN()
     {
         generatePrimesSieve();
     }
@@ -115,13 +115,13 @@ public:
                 lambda(number);
     }
 };
-vector<int> Sieve::primes;
-bool Sieve::primeContainer[];
+vector<int> PrimesUptoN::primes;
+bool PrimesUptoN::primeContainer[];
 
 int main()
 {
 
-    Sieve s = Sieve();
+    PrimesUptoN s = PrimesUptoN();
 
     // cout << s.isPrime(4) << endl;
 

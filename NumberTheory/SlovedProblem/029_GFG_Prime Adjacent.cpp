@@ -10,11 +10,11 @@ the absolute difference between them is 1
 #include <bits/stdc++.h>
 using namespace std;
 
-class Sieve
+class PrimesUptoN
 {
 private:
-    const static int mx = 1e4;
-    static bool primeContainer[mx + 1];
+    const static int N = 1e4;
+    static bool primeContainer[N + 1];
     static vector<int> primes;
     bool alreadyPrimeGenerated = false;
 
@@ -24,7 +24,7 @@ private:
 private:
     void crossMultipleOf(int i)
     {
-        for (int multiple = i * i; multiple <= mx; multiple += i)
+        for (int multiple = i * i; multiple <= N; multiple += i)
             primeContainer[multiple] = cross;
     }
 
@@ -33,7 +33,7 @@ private:
         // Time complexity: O(nloglog(n)))
         if (alreadyPrimeGenerated)
             return;
-        int upto = std::sqrt(mx);
+        int upto = std::sqrt(upto);
         primeContainer[0] = cross, primeContainer[1] = cross;
         for (int i = 2; i <= upto; ++i)
         {
@@ -44,7 +44,7 @@ private:
     }
 
 public:
-    Sieve()
+    PrimesUptoN()
     {
         generatePrimesSieve();
     }
@@ -57,13 +57,13 @@ public:
     }
 };
 
-bool Sieve::primeContainer[];
+bool PrimesUptoN::primeContainer[];
 class Solution
 {
 public:
     int primeAdjacent(int n)
     {
-        Sieve s = Sieve();
+        PrimesUptoN s = PrimesUptoN();
         return s.isPrime(n - 1) && s.isPrime(n + 1) == true ? 1 : 0;
     }
 };

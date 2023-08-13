@@ -13,10 +13,10 @@ Integer class
 #include <bits/stdc++.h>
 using namespace std;
 
-class Sieve
+class PrimesUptoN
 {
 private:
-    const static int mx = 1e5;
+    const static int N = 1e5;
 
     static vector<int> primes;
     bool alreadyPrimeGenerated = false;
@@ -24,12 +24,12 @@ private:
     const bool notCross = false;
 
 private:
-    static bool primeContainer[mx + 1];
+    static bool primeContainer[N + 1];
 
 private:
     void crossMultipleOf(int i)
     {
-        for (int multiple = i * i; multiple <= mx; multiple += i)
+        for (int multiple = i * i; multiple <= N; multiple += i)
             primeContainer[multiple] = cross;
     }
 
@@ -38,7 +38,7 @@ private:
         // Time complexity: O(nloglog(n)))
         if (alreadyPrimeGenerated)
             return;
-        int upto = std::sqrt(mx);
+        int upto = std::sqrt(upto);
         primeContainer[0] = cross, primeContainer[1] = cross;
         for (int i = 2; i <= upto; ++i)
         {
@@ -49,7 +49,7 @@ private:
     }
 
 public:
-    Sieve()
+    PrimesUptoN()
     {
         generatePrimesSieve();
     }
@@ -70,7 +70,7 @@ public:
         return primes;
     }
 };
-bool Sieve::primeContainer[];
+bool PrimesUptoN::primeContainer[];
 
 class Integer
 {
@@ -97,7 +97,7 @@ class Solution
 public:
     long long getPPS(int a, int b)
     {
-        Sieve s = Sieve();
+        PrimesUptoN s = PrimesUptoN();
         vector<int> primes = s.getPrimes(a, b);
         long long sum = 0;
         for (int it : primes)

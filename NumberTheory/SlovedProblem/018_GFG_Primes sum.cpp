@@ -15,20 +15,20 @@ Link:https://practice.geeksforgeeks.org/problems/primes-sum5827/1?page=1&difficu
 #include <functional>
 using namespace std;
 
-class Sieve
+class PrimesUptoN
 {
 
     // Generating Primes
 private:
-    const static int mx = 1e5;
-    static bool primeContainer[mx + 1];
+    const static int N = 1e5;
+    static bool primeContainer[N + 1];
     bool alreadyPrimeGenerated = false;
     const bool cross = true, notCross = false;
 
 private:
     void crossMultipleOf(int i)
     {
-        for (int multiple = i * i; multiple <= mx; multiple += i)
+        for (int multiple = i * i; multiple <= N; multiple += i)
             primeContainer[multiple] = cross;
     }
 
@@ -37,7 +37,7 @@ private:
         // Time complexity: O(nloglog(n)))
         if (alreadyPrimeGenerated)
             return;
-        int upto = std::sqrt(mx);
+        int upto = std::sqrt(upto);
         primeContainer[0] = cross, primeContainer[1] = cross;
         for (int i = 2; i <= upto; ++i)
         {
@@ -49,7 +49,7 @@ private:
 
 public:
     // constructor
-    Sieve()
+    PrimesUptoN()
     {
         generatePrimesSieve();
     }
@@ -71,7 +71,7 @@ public:
         return primes;
     }
 };
-bool Sieve::primeContainer[];
+bool PrimesUptoN::primeContainer[];
 class Solution
 {
 
@@ -80,7 +80,7 @@ public:
     {
         if (n < 4)
             return "No";
-        Sieve s = Sieve();
+        PrimesUptoN s = PrimesUptoN();
         int half = n / 2;
         for (int it : s.getPrimes(2, half))
         {

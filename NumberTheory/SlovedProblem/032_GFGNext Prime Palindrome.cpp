@@ -13,20 +13,20 @@ than or equal to N that is a prime and a palindrome.
 #include <cmath>
 #include <set>
 using namespace std;
-class Sieve
+class PrimesUptoN
 {
 
     // Generating Primes
 private:
-    const static int mx = 1e7;
-    static bool primeContainer[mx + 1];
+    const static int N = 1e7;
+    static bool primeContainer[N + 1];
     bool alreadyPrimeGenerated = false;
     const bool cross = true, notCross = false;
 
 private:
     void crossMultipleOf(int i)
     {
-        for (int multiple = i * i; multiple <= mx; multiple += i)
+        for (int multiple = i * i; multiple <= N; multiple += i)
             primeContainer[multiple] = cross;
     }
 
@@ -35,7 +35,7 @@ private:
         // Time complexity: O(nloglog(n)))
         if (alreadyPrimeGenerated)
             return;
-        int upto = std::sqrt(mx);
+        int upto = std::sqrt(upto);
         primeContainer[0] = cross, primeContainer[1] = cross;
         for (int i = 2; i <= upto; ++i)
         {
@@ -47,7 +47,7 @@ private:
 
 public:
     // constructor
-    Sieve()
+    PrimesUptoN()
     {
         generatePrimesSieve();
     }
@@ -60,7 +60,7 @@ public:
     }
     int getNextPrime(int number)
     {
-        for (int i = number; i <= mx; ++i)
+        for (int i = number; i <= N; ++i)
         {
             if (isPrime(i))
                 return i;
@@ -69,7 +69,7 @@ public:
     }
 };
 
-bool Sieve::primeContainer[];
+bool PrimesUptoN::primeContainer[];
 class Integer
 {
 private:
@@ -100,7 +100,7 @@ class Solution
 public:
     int PrimePalindrome(int n)
     {
-        Sieve s = Sieve();
+        PrimesUptoN s = PrimesUptoN();
 
         while (true)
         {

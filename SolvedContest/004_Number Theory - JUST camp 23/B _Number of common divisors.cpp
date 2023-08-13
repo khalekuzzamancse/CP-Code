@@ -136,9 +136,9 @@ public:
 class PrimeFactorizer
 {
 private:
-    bool alreadyCalculated = false;
+    static bool alreadyCalculated;
     const bool notCross = 0;
-    static const int mx = 1e2;
+    static const int mx = 1e6;
     static int smallestPrimeFactors[mx + 1];
     bool shouldInitializeSmallestPrimeFactor(int number)
     {
@@ -204,42 +204,9 @@ public:
         }
         return factor;
     }
-
-public:
-    // Naive
-    PrimeFactor getPrimeFactorizationNaive()
-    {
-
-        int cnt = 0;
-        bool isFactored = cnt > 0;
-
-        while (n % 2 == 0)
-        {
-            cnt++;
-            n = n / 2;
-        }
-        PrimeFactor factor = PrimeFactor();
-        if (cnt > 0)
-            factor.add(2, cnt);
-        for (int i = 3; i <= sqrt(n); i = i + 2)
-        {
-            cnt = 0;
-            while (n % i == 0)
-            {
-                cnt++;
-                n = n / i;
-            }
-            if (cnt > 0)
-                factor.add(i, cnt);
-        }
-
-        if (n > 2)
-            factor.add(n, 1);
-        return factor;
-    }
 };
 int PrimeFactorizer::smallestPrimeFactors[];
-
+bool PrimeFactorizer::alreadyCalculated = false;
 class DivisorUtils
 {
 private:
@@ -251,19 +218,9 @@ public:
     {
         this->n = n;
     }
+    DivisorUtils() = default;
 
 public:
-    // int getNumberOfDivisors()
-    // {
-    //     vector<pair<int, int>> factors = pf.getPrimeFactorization();
-    //     int cnt = 1;
-    //     for (auto it : factors)
-    //     {
-    //         int exponent = it.second;
-    //         cnt *= (exponent + 1);
-    //     }
-    //     return cnt;
-    // }
     static int getNumberOfCommonDivisor(long long a, long long b)
     {
         auto x = PrimeFactorizer(a).getPrimeFactorizationSieve();
@@ -274,24 +231,20 @@ public:
             cnt *= (it.exponent + 1);
         return cnt;
     }
-    long long getSumOfDivisors()
-    {
-        auto factors = PrimeFactorizer(n).getPrimeFactorizationNaive();
-        long long sum = 1;
-        for (auto it : factors.factors)
-        {
-            long long p = (pow(it.base, (it.exponent + 1)) - 1) / (it.base - 1);
-            sum *= p;
-        }
-        return sum;
-    }
-    // get all the divisor
-    // getTotal Exponent
 };
 int main()
 {
-    // DivisorUtils util = DivisorUtils::getNumberOfCommonDivisor(10, 20);
-    cout << DivisorUtils::getNumberOfCommonDivisor(10, 10) << endl;
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        int a, b;
+        cin >> a >> b;
+        cout << DivisorUtils::getNumberOfCommonDivisor(a, b) << endl;
+    }
 
     return 0;
 }

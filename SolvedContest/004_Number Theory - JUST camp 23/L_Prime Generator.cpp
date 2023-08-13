@@ -115,7 +115,6 @@ public:
         for (int i = 0; i < rangeLength; i++)
         {
             long long number = getDecodedNumber(i);
-
             if (number > 1 && isPrime(number))
                 cout << number << endl;
         }
@@ -125,6 +124,17 @@ public:
 
 int main()
 {
-    SegmentedSieve(1, 10).toString();
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        long long L, R;
+        cin >> L >> R;
+        SegmentedSieve(L, R).toString();
+    }
+
     return 0;
 }
