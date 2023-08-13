@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
+#include <limits>
 #include <unordered_set>
 
 using namespace std;
@@ -217,7 +218,8 @@ public:
     }
 
     //--------------Different methods for finding minimum element-----.
-    // -------------Start finding minimum element-------------------
+
+    // ------------- 1st Minimum element ------------------
     pair<T, int> min(int startIndex = 0, int endIndex = INVALID_INDEX)
     {
         auto range = getRange(startIndex, endIndex);
@@ -225,8 +227,25 @@ public:
         int pos = std::distance(_elements.begin(), it_min);
         return make_pair(*it_min, pos);
     }
+    // ------------- 2nd Minimum element ------------------
+    pair<T, int> secondMin(int startIndex = 0, int endIndex = INVALID_INDEX)
+    {
+        auto range = getRange(startIndex, endIndex);
+        T firstMin = *range.first, secondMin = *range.first;
+        int firstMinPos = 0, secondMinPos = 0;
+        for (auto it = range.first; it != range.second; ++it)
+        {
+            if (*it < firstMin)
+                secondMin = firstMin, secondMinPos = firstMinPos, firstMin = *it,
+                firstMinPos = std::distance(range.first, it);
+            else if (*it < secondMin && *it != firstMin)
+                secondMin = *it, secondMinPos = std::distance(range.first, it);
+        }
+        return make_pair(secondMin, secondMinPos);
+    }
 
-    // -------------END!!----------
+    //...........Different methods for finding MAX element..........
+    //...................1st MAX MAX MAX MAX....
 
     pair<T, int> max(int start = 0, int end = INVALID_INDEX)
     {
@@ -235,6 +254,25 @@ public:
         int pos = std::distance(_elements.begin(), it_max);
         return make_pair(*it_max, pos);
     }
+    //...................2nd 2nd MAX MAX MAX MAX....
+    pair<T, int> secondMax(int start = 0, int end = INVALID_INDEX)
+    {
+        auto range = getRange(start, end);
+        T firstMax = *range.first, secondMax = std::numeric_limits<T>::lowest();
+        int firstMaxPos = 0, secondMaxPos = 0;
+        for (auto it = range.first; it != range.second; ++it)
+        {
+            if (*it > firstMax)
+                secondMax = firstMax, secondMaxPos = firstMaxPos, firstMax = *it,
+                firstMaxPos = std::distance(range.first, it);
+            else if (*it > secondMax && *it != firstMax)
+                secondMax = *it, secondMaxPos = std::distance(range.first, it);
+        }
+        return make_pair(secondMax, secondMaxPos);
+    }
+
+
+    // -------------END!!----------
 
     void forEach(std::function<void(size_t index, const T &value, bool &stop)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
     {
@@ -337,10 +375,11 @@ int main()
     v.pushFront(20);
     v.insertAt(10, 4);
     v.toString();
+    cout << v.secondMax(2, 5).first << endl;
     // v.forEachReverse([](size_t i, int value, bool &stop)
     //                  { cout << i << ":" << value << endl; });
-    v.forEach([](size_t i, int value, bool &stop)
-              { cout << i << ":" << value << endl; });
+    // v.forEach([](size_t i, int value, bool &stop)
+    //           { cout << i << ":" << value << endl; });
 
     // v.removeFirst();
     // v.removeLast();
