@@ -124,16 +124,15 @@ public:
         }
         return PrimeFactor(result);
     }
-      int getMaxExponent(PrimeFactor pF)
+    int getMaxExponent(PrimeFactor pF)
     {
         int max = 0;
         for (auto it : pF.factors)
             if (it.exponent > max)
                 max = it.exponent;
-        
+
         return max;
     }
-
 
 public:
     void toString()
@@ -147,7 +146,7 @@ public:
 class PrimeFactorizer
 {
 private:
-    bool alreadyCalculated = false;
+    static bool alreadyCalculated;
     const bool notCross = 0;
     static const int mx = 1e2;
     static int smallestPrimeFactors[mx + 1];
@@ -253,6 +252,7 @@ public:
     }
 };
 int PrimeFactorizer::smallestPrimeFactors[];
+bool PrimeFactorizer::alreadyCalculated = false;
 
 int main()
 {
