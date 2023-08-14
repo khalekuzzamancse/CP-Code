@@ -104,6 +104,7 @@ public:
         }
         return PrimeFactor(result);
     }
+
     PrimeFactor getCommonFactorsWithMaxExponents(PrimeFactor a)
     {
         vector<Factor> f = a.factors;
@@ -123,6 +124,16 @@ public:
         }
         return PrimeFactor(result);
     }
+      int getMaxExponent(PrimeFactor pF)
+    {
+        int max = 0;
+        for (auto it : pF.factors)
+            if (it.exponent > max)
+                max = it.exponent;
+        
+        return max;
+    }
+
 
 public:
     void toString()
@@ -171,9 +182,8 @@ private:
         }
         alreadyCalculated = true;
     }
-    //getPrimeFactors
-    //getUniquePrimeFactors
-    
+    // getPrimeFactors
+    // getUniquePrimeFactors
 
 private:
     long long n;

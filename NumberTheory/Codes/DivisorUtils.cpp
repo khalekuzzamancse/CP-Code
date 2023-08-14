@@ -253,17 +253,17 @@ public:
     }
 
 public:
-    // int getNumberOfDivisors()
-    // {
-    //     vector<pair<int, int>> factors = pf.getPrimeFactorization();
-    //     int cnt = 1;
-    //     for (auto it : factors)
-    //     {
-    //         int exponent = it.second;
-    //         cnt *= (exponent + 1);
-    //     }
-    //     return cnt;
-    // }
+    int getNumberOfDivisors()
+    {
+        auto factors = PrimeFactorizer(n).getPrimeFactorizationSieve();
+        int cnt = 1;
+        for (auto it : factors.factors)
+        {
+            int exponent = it.exponent;
+            cnt *= (exponent + 1);
+        }
+        return cnt;
+    }
     static int getNumberOfCommonDivisor(long long a, long long b)
     {
         auto x = PrimeFactorizer(a).getPrimeFactorizationSieve();
@@ -291,7 +291,8 @@ public:
 int main()
 {
     // DivisorUtils util = DivisorUtils::getNumberOfCommonDivisor(10, 20);
-    cout << DivisorUtils::getNumberOfCommonDivisor(10, 10) << endl;
+    // cout << DivisorUtils::getNumberOfCommonDivisor(10, 10) << endl;
+    cout << DivisorUtils(2018).getNumberOfDivisors() << endl;
 
     return 0;
 }

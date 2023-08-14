@@ -40,13 +40,18 @@ public:
         _factors.push_back(Factor(base, exponent));
     }
 
-public:
-    void toString()
+    int getMaxExponent(PrimeFactor pF)
     {
-        for (auto it : factors)
-            it.toString();
-        cout << endl;
+        int max = 0;
+        for (auto it : pF.factors)
+            if (it.exponent > max)
+                max = it.exponent;
+        
+        return max;
     }
+
+
+  
 };
 
 class PrimeFactorizer
@@ -67,7 +72,6 @@ public:
     {
 
         int cnt = 0;
-        bool isFactored = cnt > 0;
 
         while (n % 2 == 0)
         {
@@ -94,45 +98,22 @@ public:
         return factor;
     }
 };
-int ans(int n)
-{
-    auto a = PrimeFactorizer(n).getPrimeFactorizationNaive();
-
-    if (a.factors.size() == 1)
-    {
-        int cnt = 0;
-        if (a.factors.at(0).exponent == 1)
-            cnt = 1;
-        else if (a.factors.at(0).exponent % 2 == 0)
-            cnt = 2;
-        else
-            cnt = 3;
-        return cnt;
-    }
-    int cnt = 0;
-    for (auto it : a.factors)
-    {
-        if (it.exponent % 2 == 0)
-            cnt = cnt + 2;
-        else
-            cnt = cnt + 1;
-    }
-    return cnt;
-}
 
 int main()
 {
+
     ios::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
-
     int t;
     cin >> t;
     while (t--)
     {
         int n;
         cin >> n;
-        cout << ans(n) << endl;
+        int cnt = 0;
+        auto a = PrimeFactorizer(n).getPrimeFactorizationNaive();
+        cout << PrimeFactor().getMaxExponent(a) << "\n";
     }
 
     return 0;

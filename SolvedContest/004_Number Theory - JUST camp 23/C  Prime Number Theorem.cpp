@@ -8,7 +8,7 @@ const int N = 1e8 + 5;
 bool sievePrimes[N];
 vector<int> primes;
 const bool cross = false, notCross = true;
-void sieve()
+void primeFactorizationUptoN()
 {
     fill(sievePrimes, sievePrimes + N, notCross);
     sievePrimes[0] = sievePrimes[1] = cross;
@@ -39,7 +39,7 @@ int main()
     ios::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
-    sieve();
+    primeFactorizationUptoN();
     int x;
     while (cin >> x && x != 0)
     {

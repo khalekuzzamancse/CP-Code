@@ -1,114 +1,33 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
-bool notCross = 0;
-const int mx = 1e6 + 5;
-int smallestPrimeFactors[mx + 1];
 
-class Factor
+int gcd(int a, int b)
 {
-public:
-    const long long base;
-    const int exponent;
-
-public:
-    Factor(long long base, int exponent)
-        : base(base), exponent(exponent) {}
-    void toString(std::string separator = "^")
+    if (b == 0)
     {
-        cout << "(" << base << "^" << exponent << ")";
+        return a;
     }
-};
-
-class PrimeFactor
-{
-public:
-private:
-    vector<Factor> _factors;
-
-public:
-    const vector<Factor> &factors = _factors;
-
-public:
-    PrimeFactor()
-    {
-    }
-
-    PrimeFactor(vector<Factor> factors) : _factors(factors) {}
-
-public:
-    void add(long long base, int exponent)
-    {
-        _factors.push_back(Factor(base, exponent));
-    }
-
-public:
-    void toString()
-    {
-        for (auto it : factors)
-            it.toString();
-        cout << endl;
-    }
-};
-bool shouldInitializeSmallestPrimeFactor(int number)
-{
-    return smallestPrimeFactors[number] == 0;
-}
-bool isPrime(int number)
-{
-    return smallestPrimeFactors[number] == notCross;
+    return gcd(b, a % b);
 }
 
-void updateMultipleOf(int primeFactor)
-{
-    for (int multiple = primeFactor * primeFactor; multiple <= mx; multiple += primeFactor)
-    {
-        if (shouldInitializeSmallestPrimeFactor(multiple))
-            smallestPrimeFactors[multiple] = primeFactor;
-    }
-}
-
-void generateSmallestFactors()
+int getCommonDiv(int gcd)
 {
 
-    int till = std::sqrt(mx);
-    for (int i = 2; i <= till; ++i)
-    {
-        if (isPrime(i))
-            updateMultipleOf(i);
-    }
-}
-int getSmallestPrimeFactor(int n)
-{
-    return smallestPrimeFactors[n] == 0 ? n : smallestPrimeFactors[n];
-}
+    int count = 0;
 
-PrimeFactor getPrimeFactorizationSieve(int n)
-{
-    PrimeFactor factor = PrimeFactor();
+    for (int i = 1; i * i <= gcd; i++)
+    {
+        if (gcd % i == 0)
+        {
+            count += 2;
+            if (i * i == gcd)
+            {
+                count--;
+            }
+        }
+    }
 
-    while (n > 1)
-    {
-        int p = getSmallestPrimeFactor(n);
-        int exponent = 0;
-        while (n % p == 0)
-            exponent++, n = n / p;
-        factor.add(p, exponent);
-    }
-    return factor;
-}
-int getNumberOfDivisors(int n)
-{
-    auto factors = getPrimeFactorizationSieve(n).factors;
-    int cnt = 1;
-    for (auto it : factors)
-    {
-        int exponent = it.exponent;
-        cnt *= (exponent + 1);
-    }
-    return cnt;
+    return count;
 }
 
 int main()
@@ -116,16 +35,14 @@ int main()
     ios::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
-    generateSmallestFactors();
     int t;
     cin >> t;
     while (t--)
     {
         int a, b;
         cin >> a >> b;
-        int gcd = __gcd(a, b);
-        cout << getNumberOfDivisors(gcd) << endl;
+        int g = gcd(a, b);
+        cout << getCommonDiv(g) << "\n";
     }
-
     return 0;
 }
