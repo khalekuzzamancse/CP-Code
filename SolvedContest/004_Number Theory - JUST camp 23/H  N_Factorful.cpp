@@ -134,9 +134,10 @@ vector<int> distinctPrimeFactorsUpto10e6[mx + 1];
 void calculate()
 {
     vector<int> v(11, 0);
-    v[0] = 1;
+
     distinctPrimeFactorsUpto10e6[0] = v;
     distinctPrimeFactorsUpto10e6[1] = v;
+    distinctPrimeFactorsUpto10e6[1][0] = 1;
 
     for (int i = 2; i <= mx; i++)
     {
@@ -149,8 +150,7 @@ void calculate()
 }
 int getNFactful(int a, int b, int n)
 {
-    if (a < 2 && n == 0)
-        return 1;
+
     return distinctPrimeFactorsUpto10e6[b][n] - distinctPrimeFactorsUpto10e6[a - 1][n];
 }
 int main()
