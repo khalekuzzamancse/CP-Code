@@ -151,7 +151,7 @@ int getNFactful(int a, int b, int n)
 {
     if (a < 2 && n == 0)
         return 1;
-    return distinctPrimeFactorsUpto10e6[b][n] - distinctPrimeFactorsUpto10e6[a][n];
+    return distinctPrimeFactorsUpto10e6[b][n] - distinctPrimeFactorsUpto10e6[a - 1][n];
 }
 int main()
 {
