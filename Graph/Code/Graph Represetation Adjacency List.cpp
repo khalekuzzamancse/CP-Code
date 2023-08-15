@@ -7,7 +7,7 @@ class Edge
 {
 public:
     int u, v, weight;
-    Edge(int u, int v, int weight = 1)
+    Edge(int u, int v, int weight)
     {
         this->u = u;
         this->v = v;
@@ -15,7 +15,7 @@ public:
     }
     void toString()
     {
-        cout<<u<<"--"<<v<<" = "<<weight<<endl;
+        cout << "   " << u << "--" << v << " = " << weight << endl;
     }
 };
 
@@ -26,29 +26,41 @@ class UndirectedGraph
 
 public:
     UndirectedGraph() = default;
-    UndirectedGraph(int maxNodeValue, int totalEdges)
+    UndirectedGraph(int maxNodeValue, int totalEdges, bool isWeighted = false)
     {
         this->maxNodeValue = maxNodeValue;
         adjacencyList.resize(maxNodeValue + 1);
-        while (totalEdges--)
+        if (isWeighted)
         {
-            int u, v;
-            cin >> u >> v;
-            addEdge(u, v);
+            while (totalEdges--)
+            {
+                int u, v, w;
+                cin >> u >> v >> w;
+                addEdge(u, v, w);
+            }
+        }
+        else
+        {
+            while (totalEdges--)
+            {
+                int u, v;
+                cin >> u >> v;
+                addEdge(u, v);
+            }
         }
     }
 
-    void addEdge(int u, int v)
+    void addEdge(int u, int v, int w = 1)
     {
-        adjacencyList[u].push_back(Edge(u, v));
-        adjacencyList[v].push_back(Edge(u, v));
+        adjacencyList[u].push_back(Edge(u, v, w));
+        adjacencyList[v].push_back(Edge(u, v, w));
     }
 
     void toString()
     {
         for (int node = 1; node <= maxNodeValue; node++)
         {
-            cout << node << " : "<<endl;
+            cout << node << " : " << endl;
             list<Edge> neighbors = adjacencyList[node];
             for (Edge neighbor : neighbors)
                 neighbor.toString();
