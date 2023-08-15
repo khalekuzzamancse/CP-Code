@@ -3,26 +3,25 @@
 #include <algorithm>
 #include <list>
 using namespace std;
-class Edge
+class Neighbour
 {
 public:
-    int u, v, weight;
-    Edge(int u, int v, int weight)
+    int neighbour, weight;
+    Neighbour(int u, int weight)
     {
-        this->u = u;
-        this->v = v;
+        this->neighbour = u;
         this->weight = weight;
     }
     void toString()
     {
-        cout << "   " << u << "--" << v << " = " << weight << endl;
+        cout << " (" << neighbour << " , " << weight << " ) ";
     }
 };
 
 class UndirectedGraph
 {
     int maxNodeValue;
-    vector<list<Edge>> adjacencyList;
+    vector<list<Neighbour>> adjacencyList;
 
 public:
     UndirectedGraph() = default;
@@ -52,17 +51,17 @@ public:
 
     void addEdge(int u, int v, int w = 1)
     {
-        adjacencyList[u].push_back(Edge(u, v, w));
-        adjacencyList[v].push_back(Edge(u, v, w));
+        adjacencyList[u].push_back(Neighbour(v, w));
+        adjacencyList[v].push_back(Neighbour(u, w));
     }
 
     void toString()
     {
         for (int node = 1; node <= maxNodeValue; node++)
         {
-            cout << node << " : " << endl;
-            list<Edge> neighbors = adjacencyList[node];
-            for (Edge neighbor : neighbors)
+            cout << node << " : ";
+            list<Neighbour> neighbors = adjacencyList[node];
+            for (Neighbour neighbor : neighbors)
                 neighbor.toString();
             cout << endl;
         }
@@ -73,7 +72,7 @@ int main()
 
     int n, m;
     cin >> n >> m;
-    UndirectedGraph graph = UndirectedGraph(n, m);
+    UndirectedGraph graph = UndirectedGraph(n, m, true);
     graph.toString();
 
     return 0;
