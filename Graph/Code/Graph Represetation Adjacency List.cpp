@@ -6,32 +6,36 @@ using namespace std;
 
 class UndirectedGraph
 {
-    const int MX = 1e5 + 1;
+    int maxNodeValue;
     vector<list<int>> adjacencyList;
 
 public:
     UndirectedGraph() = default;
-    UndirectedGraph(int totalEdges)
+    UndirectedGraph(int maxNodeValue, int totalEdges)
     {
+        this->maxNodeValue = maxNodeValue;
+        adjacencyList.resize(maxNodeValue + 1);
         while (totalEdges--)
         {
             int u, v;
             cin >> u >> v;
+
             addEdge(u, v);
         }
     }
 
     void addEdge(int u, int v)
     {
+
         adjacencyList[u].push_back(v);
         adjacencyList[v].push_back(u);
     }
 
     void toString()
     {
-        for (int i = 1; i <= MX; i++)
+        for (int i = 1; i <= maxNodeValue; i++)
         {
-            cout << "Adjacency List of " << i << ":";
+            cout << i << " : ";
             for (auto it : adjacencyList[i])
                 cout << it << " ";
             cout << endl;
@@ -40,6 +44,11 @@ public:
 };
 int main()
 {
+
+    int n, m;
+    cin >> n >> m;
+    UndirectedGraph graph = UndirectedGraph(n, m);
+    graph.toString();
 
     return 0;
 }
