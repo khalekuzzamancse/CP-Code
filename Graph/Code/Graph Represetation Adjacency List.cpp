@@ -3,96 +3,43 @@
 #include <algorithm>
 #include <list>
 using namespace std;
-/*
 
- void removeNeighbor(const Node<T> &value)
-    {
-        adjutants.remove(value);
-    }
-    int degree()
-    {
-        return adjutants.size();
-    }
-    bool containsNeighbor(const Node<T> &value)
-    {
-        return std::find(adjutants.begin(), adjutants.end(), value) != adjutants.end();
-    }
-    bool isAdjacentEmpty()
-    {
-        return adjutants.empty();
-    }
-    std::list<T> getAdjacencyList()
-    {
-        return adjutants;
-    }
-  Node &operator=(const Node<T> &other)
-    {
-        if (this != &other)
-        {
-            data = other.data;
-            adjutants = other.adjutants;
-        }
-        return *this;
-    }
-    bool operator==(const Node<T> &other) const
-    {
-        return data == other.data && adjutants == other.adjutants;
-    }
-
-    bool operator!=(const Node<T> &other) const
-    {
-        return !(*this == other);
-    }
-
-    bool operator<(const Node<T> &other) const
-    {
-        return data < other.data;
-    }
-
-    bool operator>(const Node<T> &other) const
-    {
-        return data > other.data;
-    }
-
-*/
-template <typename T>
-class Node
+class UndirectedGraph
 {
-private:
-    T _value;
-    std::list<Node *> adjutants;
+    const int MX = 1e5 + 1;
+    vector<list<int>> adjacencyList;
 
 public:
-    Node(T value) : _value(value) {}
-    Node() = default;
-
-public:
-    void addNeighbor(Node<T> *value)
+    UndirectedGraph() = default;
+    UndirectedGraph(int totalEdges)
     {
-        adjutants.push_back(value);
+        while (totalEdges--)
+        {
+            int u, v;
+            cin >> u >> v;
+            addEdge(u, v);
+        }
     }
 
-    T data()
+    void addEdge(int u, int v)
     {
-        return _value;
+        adjacencyList[u].push_back(v);
+        adjacencyList[v].push_back(u);
     }
 
-public: //
-    void toString(string separator = " ")
+    void toString()
     {
-        cout << _value << " : ";
-        for (auto it : adjutants)
-            cout << it->data() << separator;
-        cout << "\n";
+        for (int i = 1; i <= MX; i++)
+        {
+            cout << "Adjacency List of " << i << ":";
+            for (auto it : adjacencyList[i])
+                cout << it << " ";
+            cout << endl;
+        }
     }
 };
 int main()
 {
-    Node<int> node;
-    node = Node<int>(10);
-    node.addNeighbor(new Node<int>(5));
-    node.addNeighbor(new Node<int>(7));
-    node.toString();
 
     return 0;
 }
