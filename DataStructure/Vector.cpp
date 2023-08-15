@@ -331,6 +331,7 @@ public:
             index++;
         }
     }
+
     void forEachReverse(std::function<void(size_t index, const T &value, bool &stop)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
     {
         auto range = getRange(startIndex, endIndex);
