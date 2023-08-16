@@ -7,6 +7,9 @@
 using namespace std;
 class String
 {
+public:
+    static const int INDEX_BEYOND_END = -1;
+
 private:
     std::string data;
     bool isOutOfBound(int position)
@@ -17,10 +20,16 @@ private:
               typename std::string::iterator>
     getRange(int start, int end)
     {
-        if (end == -1)
+        if (end ==INDEX_BEYOND_END)
             end = getLastIndex();
-        if (isOutOfBound(start) || isOutOfBound(end) || start > end)
-            throw std::out_of_range("Invalid range");
+        if (end == INDEX_BEYOND_END)
+            end = getLastIndex();
+        if (isOutOfBound(start))
+            throw std::out_of_range("Invalid start position");
+        if (isOutOfBound(end))
+            throw std::out_of_range("Invalid end position");
+        if (isOutOfBound(start > end))
+            throw std::out_of_range("Invalid start>end");
         auto it_start = this->data.begin();
         auto it_end = this->data.begin();
         std::advance(it_start, start);
@@ -70,9 +79,7 @@ private:
 
 public:
     // Constructors
-    String()
-    {
-    }
+    String() = default;
     String(string &s)
     {
         this->data = s;
@@ -87,6 +94,7 @@ public:
         }
     }
 
+public: // operator overloading
     // adding elements
     void pushBack(const char &value)
     {
@@ -125,27 +133,27 @@ public:
         advance(it, position);
         this->data.erase(it);
     }
-    void remove(const char &value, int start = 0, int end = -1)
+    void remove(const char &value, int start = 0, int end = INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         this->data.erase(std::remove(range.first, range.second, value), range.second);
     }
-    void remove(int start = 0, int end = -1)
+    void remove(int start = 0, int end = INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         this->data.erase(range.first, range.second);
     }
-    void removeUntil(int start = 0, int end = -1)
+    void removeUntil(int start = 0, int end = INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         this->data.erase(range.first, range.second);
     }
-    void removeIf(std::function<bool(const char &)> predicate, int start = 0, int end = -1)
+    void removeIf(std::function<bool(const char &)> predicate, int start = 0, int end =INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         this->data.erase(std::remove_if(range.first, range.second, predicate), range.second);
     }
-    String &removeDuplicate(int start = 0, int end = -1)
+    String &removeDuplicate(int start = 0, int end =INDEX_BEYOND_END)
     {
         // Complexity: O(N)
         auto range = getRange(start, end);
@@ -158,7 +166,7 @@ public:
         return *this;
     }
 
-    String &removeConsecutiveDuplicate(int start = 0, int end = -1)
+    String &removeConsecutiveDuplicate(int start = 0, int end =INDEX_BEYOND_END)
     {
         // Complexity: O(N)
         auto range = getRange(start, end);
@@ -176,7 +184,7 @@ public:
 
     // Diffiererent finding methods
 
-    int find(std::function<bool(const char &)> predicate, int start = 0, int end = -1)
+    int find(std::function<bool(const char &)> predicate, int start = 0, int end =INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         auto it = std::find_if(range.first, range.second, predicate);
@@ -186,7 +194,7 @@ public:
             pos = std::distance(range.first, it) + start;
         return pos;
     }
-    int findReseverse(std::function<bool(const char &)> predicate, int start = 0, int end = -1)
+    int findReseverse(std::function<bool(const char &)> predicate, int start = 0, int end =INDEX_BEYOND_END)
     {
         std::pair<typename std::string::iterator,
                   typename std::string::iterator>
@@ -211,12 +219,12 @@ public:
         return !doesExits(value);
     }
 
-    int count(const char &value, int start = 0, int end = -1)
+    int count(const char &value, int start = 0, int end =INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         return ::count(range.first, range.second, value);
     }
-    int countIf(std::function<bool(const char &)> predicate, int start = 0, int end = -1)
+    int countIf(std::function<bool(const char &)> predicate, int start = 0, int end =INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         return ::count_if(range.first, range.second, predicate);
@@ -226,7 +234,7 @@ public:
     // These methods have default paramter implementations
 
     pair<char, int> max(
-        int start = 0, int end = -1)
+        int start = 0, int end =INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         auto it = std::max_element(range.first, range.second);
@@ -245,7 +253,7 @@ public:
         return std::make_pair(value, pos);
     }
     //
-    void forEach(std::function<void(size_t, const char &)> func, int start = 0, int end = -1)
+    void forEach(std::function<void(size_t, const char &)> func, int start = 0, int end =INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         size_t i = 0;
@@ -255,7 +263,7 @@ public:
             i++;
         }
     }
-    void forEachReverse(std::function<void(size_t, const char &)> func, int end = -1, int start = 0)
+    void forEachReverse(std::function<void(size_t, const char &)> func, int start = 0, int end =INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         size_t i = 0;
@@ -283,7 +291,7 @@ public:
     }
 
     // Filter methods
-    String filter(std::function<bool(size_t, const char &)> predicate, int start = 0, int end = -1)
+    String filter(std::function<bool(size_t, const char &)> predicate, int start = 0, int end = INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         string result;
@@ -314,7 +322,7 @@ public:
 
     // Reversing
     void reverse(int start = 0,
-                 int end = -1)
+                 int end = INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         std::reverse(range.first, range.second);
@@ -359,13 +367,13 @@ public:
     }
     char getFirst()
     {
-        if (isEmpty())
+        if (data.empty())
             throw std::out_of_range("Empty string");
         return this->data.front();
     }
     char getLast()
     {
-        if (isEmpty())
+        if (data.empty())
             throw std::out_of_range("Empty string");
         return this->data.back();
     }
