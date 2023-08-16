@@ -20,7 +20,7 @@ private:
               typename std::string::iterator>
     getRange(int start, int end)
     {
-        if (end ==INDEX_BEYOND_END)
+        if (end == INDEX_BEYOND_END)
             end = getLastIndex();
         if (end == INDEX_BEYOND_END)
             end = getLastIndex();
@@ -148,12 +148,12 @@ public: // operator overloading
         auto range = getRange(start, end);
         this->data.erase(range.first, range.second);
     }
-    void removeIf(std::function<bool(const char &)> predicate, int start = 0, int end =INDEX_BEYOND_END)
+    void removeIf(std::function<bool(const char &)> predicate, int start = 0, int end = INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         this->data.erase(std::remove_if(range.first, range.second, predicate), range.second);
     }
-    String &removeDuplicate(int start = 0, int end =INDEX_BEYOND_END)
+    String &removeDuplicate(int start = 0, int end = INDEX_BEYOND_END)
     {
         // Complexity: O(N)
         auto range = getRange(start, end);
@@ -166,7 +166,7 @@ public: // operator overloading
         return *this;
     }
 
-    String &removeConsecutiveDuplicate(int start = 0, int end =INDEX_BEYOND_END)
+    String &removeConsecutiveDuplicate(int start = 0, int end = INDEX_BEYOND_END)
     {
         // Complexity: O(N)
         auto range = getRange(start, end);
@@ -184,7 +184,7 @@ public: // operator overloading
 
     // Diffiererent finding methods
 
-    int find(std::function<bool(const char &)> predicate, int start = 0, int end =INDEX_BEYOND_END)
+    int find(std::function<bool(const char &)> predicate, int start = 0, int end = INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         auto it = std::find_if(range.first, range.second, predicate);
@@ -194,7 +194,7 @@ public: // operator overloading
             pos = std::distance(range.first, it) + start;
         return pos;
     }
-    int findReseverse(std::function<bool(const char &)> predicate, int start = 0, int end =INDEX_BEYOND_END)
+    int findReseverse(std::function<bool(const char &)> predicate, int start = 0, int end = INDEX_BEYOND_END)
     {
         std::pair<typename std::string::iterator,
                   typename std::string::iterator>
@@ -219,12 +219,12 @@ public: // operator overloading
         return !doesExits(value);
     }
 
-    int count(const char &value, int start = 0, int end =INDEX_BEYOND_END)
+    int count(const char &value, int start = 0, int end = INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         return ::count(range.first, range.second, value);
     }
-    int countIf(std::function<bool(const char &)> predicate, int start = 0, int end =INDEX_BEYOND_END)
+    int countIf(std::function<bool(const char &)> predicate, int start = 0, int end = INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         return ::count_if(range.first, range.second, predicate);
@@ -234,7 +234,7 @@ public: // operator overloading
     // These methods have default paramter implementations
 
     pair<char, int> max(
-        int start = 0, int end =INDEX_BEYOND_END)
+        int start = 0, int end = INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         auto it = std::max_element(range.first, range.second);
@@ -253,7 +253,7 @@ public: // operator overloading
         return std::make_pair(value, pos);
     }
     //
-    void forEach(std::function<void(size_t, const char &)> func, int start = 0, int end =INDEX_BEYOND_END)
+    void forEach(std::function<void(size_t, const char &)> func, int start = 0, int end = INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         size_t i = 0;
@@ -263,7 +263,7 @@ public: // operator overloading
             i++;
         }
     }
-    void forEachReverse(std::function<void(size_t, const char &)> func, int start = 0, int end =INDEX_BEYOND_END)
+    void forEachReverse(std::function<void(size_t, const char &)> func, int start = 0, int end = INDEX_BEYOND_END)
     {
         auto range = getRange(start, end);
         size_t i = 0;
