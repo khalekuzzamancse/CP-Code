@@ -45,6 +45,11 @@ public:
             pushBack(x);
         }
     }
+    Vector(size_t inputSize, T initialValue)
+    {
+        while (inputSize--)
+            pushBack(initialValue);
+    }
     // Operator overloaded
 public:
     T &operator[](size_t index)
@@ -331,6 +336,20 @@ public:
             index++;
         }
     }
+      void forEach(std::function<void( const T &value)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
+    {
+        auto range = getRange(startIndex, endIndex);
+        for (auto it = range.first; it != range.second; ++it)
+            callback(*it);
+        
+    }
+    void forEach(std::function<void(size_t index)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
+    {
+        auto range = getRange(startIndex, endIndex);
+        size_t index = 0;
+        for (auto it = range.first; it != range.second; ++it)
+            callback(index), index++;
+    }
 
     void forEachReverse(std::function<void(size_t index, const T &value, bool &stop)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
     {
@@ -378,20 +397,21 @@ public:
     }
     T getFirst()
     {
-        if (isEmpty())
+        if (_elements.empty())
             throw std::out_of_range("Vector is empty");
         return _elements[0];
     }
     T getLast()
     {
-        if (isEmpty())
-            throw std::out_of_range("Vector is empty");
+        if (_elements.empty())
+            if (isEmpty())
+                throw std::out_of_range("Vector is empty");
         return _elements[size() - 1];
     }
 
     void toString(string separator = " ")
     {
-        if (isEmpty())
+        if (_elements.empty())
             return;
         for (int i = 0; i < size() - 1; i++)
             cout << _elements[i] << separator;
@@ -407,10 +427,32 @@ public:
         auto range = getRange(start, end);
         std::sort(range.first, range.second, comparator);
     }
+
+    vector<pair<T, size_t>> sortWithPreserveIndex(
+        std::function<bool(const T &, const T &)> comparator = [](const T &a, const T &b)
+        { return a < b; })
+    {
+        vector<pair<T, size_t>> result;
+        for (size_t i = 0; i < _elements.size(); ++i)
+            result.push_back({_elements[i], i});
+        std::sort(result.begin(), result.end(), comparator);
+        return move(result);
+    }
+    Vector<pair<T, int>> sortWithPreserveIndex()
+    {
+        vector<pair<T, int>> result(_elements.size());
+        for (size_t i = 0; i < _elements.size(); ++i)
+            result[i] = {_elements[i], i};
+
+        std::sort(result.begin(), result.end());
+        return move(Vector<pair<T, int>>(result));
+    }
 };
 
 int main()
 {
+
+    //  Vector<int> a(n), b(n), ans(n, 0);
 
     Vector<int> v;
     // v.pushBack(1);
