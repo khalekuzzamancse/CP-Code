@@ -3,35 +3,28 @@
 #include <algorithm>
 
 using namespace std;
-void push(vector<int> &p, vector<bool> &isPushed, int i, int n)
-{
-    if (isPushed[i])
-        return;
-    while (i <= n)
-    {
-        p.push_back(i);
-        isPushed[i] = true;
-        i = 2 * i;
-        if (i > n)
-            return;
-    }
-}
 int main()
 {
     int t;
     cin >> t;
     while (t--)
     {
-        int n;
-        cin >> n;
-        vector<bool> isPushed(n + 1, false);
-        vector<int> p;
-        p.push_back(1);
-        for (int i = 2; i <= n; i++)
-            push(p, isPushed, i, n);
-        for (auto it : p)
-            cout << it << " ";
-        cout << endl;
+        string x;
+        cin >> x;
+
+        int n = x.size();
+        string s1(n, '(');
+        string s2(n, ')');
+        string s = s1 + s2;
+        if (n % 2 != 0)
+        {
+            cout << "YES" << endl;
+            cout << s << endl;
+        }
+        else
+        {
+            ;
+        }
     }
     return 0;
 }

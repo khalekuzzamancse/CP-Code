@@ -338,7 +338,7 @@ public:
     }
       void forEach(std::function<void( const T &value)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
     {
-        auto range = getRange(startIndex, endIndex);
+        auto range = getRange(startIndex, endIndex); 
         for (auto it = range.first; it != range.second; ++it)
             callback(*it);
         
