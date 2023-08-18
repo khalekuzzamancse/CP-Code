@@ -24,8 +24,12 @@ private:
     {
         if (end == INVALID_INDEX)
             end = getLastIndex();
+        string msg;
+        msg.append("start: " + to_string(start));
+        msg.append("end: " + to_string(end));
+
         if (isOutOfBound(start) || isOutOfBound(end) || start > end)
-            throw std::out_of_range("Invalid range");
+            throw std::out_of_range("Invalid range\n" + msg);
         auto it_start = _elements.begin();
         auto it_end = _elements.begin();
         std::advance(it_start, start), std::advance(it_end, end + 1);
@@ -336,12 +340,11 @@ public:
             index++;
         }
     }
-      void forEach(std::function<void( const T &value)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
+    void forEach(std::function<void(const T &value)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
     {
-        auto range = getRange(startIndex, endIndex); 
+        auto range = getRange(startIndex, endIndex);
         for (auto it = range.first; it != range.second; ++it)
             callback(*it);
-        
     }
     void forEach(std::function<void(size_t index)> callback, size_t step = 1, int startIndex = 0, int endIndex = INVALID_INDEX)
     {
@@ -448,23 +451,33 @@ public:
         return move(Vector<pair<T, int>>(result));
     }
 };
+bool isZero(int value)
+{
+    return value == 0;
+}
 
 int main()
 {
+    int n;
+    cin >> n;
+    Vector<int> v = Vector<int>(n);
+    int cntZero = v.countIf(isZero);
 
+    cout << "cntZero: " << cntZero << endl;
     //  Vector<int> a(n), b(n), ans(n, 0);
 
-    Vector<int> v;
+    //  Vector<int> v;
+
     // v.pushBack(1);
     // v.pushBack(2);
     // v.pushBack(3);
     // v.pushFront(10);
     // v.pushFront(20);
     // v.insertAt(10, 4);
-    v.pushBack(2);
-    v.pushBack(9);
-    v.toString();
-    cout << v.secondMin().first << endl;
+    // v.pushBack(2);
+    // v.pushBack(9);
+    // v.toString();
+    // cout << v.secondMin().first << endl;
 
     // v.forEachReverse([](size_t i, int value, bool &stop)
     //                  { cout << i << ":" << value << endl; });
@@ -521,3 +534,9 @@ int main()
 
     return 0;
 }
+/*
+Uses example:
+Count,Does Exits,Does Not Exits:
+    https://codeforces.com/problemset/problem/1806/B
+
+*/
