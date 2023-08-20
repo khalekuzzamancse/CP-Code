@@ -1,43 +1,77 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <functional>
+#include <set>
+#include <algorithm>
 using namespace std;
 
 template <typename T>
 class Set
 {
 private:
-    set<T> data;
+    set<T> _elements;
 
 public:
-   
-    void insert(T value)
+    Set() = default;
+    Set(set<T> &s)
     {
-        this->data.insert(value);
+        _elements = s;
+    }
+    Set(size_t size)
+    {
+        while (size--)
+        {
+            T x;
+            cin >> x;
+            _elements.insert(x);
+        }
     }
 
- 
-    Set<T> commonSet(const Set<T> &set2) const
+public: // operator overloads
+    bool operator==(const Set<T> &other) const
+    {
+        return _elements == other._elements;
+    }
+
+    bool operator!=(const Set<T> &other) const
+    {
+        return !(*this == other);
+    }
+    Set(std::initializer_list<T> initList)
+    {
+        for (const T &value : initList)
+        {
+            insert(value);
+        }
+    }
+
+public:
+    void insert(T value)
+    {
+        this->_elements.insert(value);
+    }
+
+    Set<T> getCommonWith(const Set<T> &set2) const
     {
         std::set<T> commonSet;
-        std::set_intersection(data.begin(), data.end(),
-                              set2.data.begin(), set2.data.end(),
+        std::set_intersection(_elements.begin(), _elements.end(),
+                              set2._elements.begin(), set2._elements.end(),
                               std::inserter(commonSet, commonSet.begin()));
         return Set<T>(commonSet);
     }
 
-    void toString(string separator)
+    void toString(string separator = " ")
     {
-        if (isEmpty())
+        if (_elements.empty())
             return;
-        for (auto element : data)
+        for (auto element : _elements)
             cout << element << separator;
         cout << endl;
     }
     bool isEmpty()
     {
-        return data.empty();
+        return _elements.empty();
     }
 
-  
     template <typename U>
     Set<T> toSet(const U &container)
     {
@@ -46,7 +80,7 @@ public:
 
     Set<T> map(std::function<T(T)> transformFunction)
     {
-        const std::set<T> &inputSet = this->data;
+        const std::set<T> &inputSet = this->_elements;
         std::set<T> newSet;
         std::transform(inputSet.begin(), inputSet.end(), std::inserter(newSet, newSet.begin()), transformFunction);
         return Set(newSet);
@@ -54,19 +88,26 @@ public:
     Set<T> filter(std::function<bool(const T &)> predicate) const
     {
         Set<T> result;
-        for (const T &element : data)
+        for (const T &element : _elements)
             if (predicate(element))
                 result.insert(element);
         return result;
     }
 };
-int cube(const int &element)
-{
-    return element * element * element;
-}
 
 int main()
 {
+
+    Set<int> s;
+    s.insert(2);
+    s.insert(3);
+    Set<int> s2(s);
+    s.toString();
+    s2.toString();
+    cout << (s == s2) << endl;
+    Set<int> s3 = {1, 2, 3, 4, 5};
+    s3.toString();
+  
 
     // string input;
     // cin >> input;
@@ -82,15 +123,15 @@ int main()
     // }
     // evenIndexSet.toString("");
     // evenIndexSet.commonSet(oddIndexSet).toString("");
-    std::set<int> mySet = {1, 2, 3, 4};
-    Set<int> set = Set(mySet);
-    Set<int> newSet = set.map(cube).map([](int x)
-                                        { return x * 2; });
+    // std::set<int> mySet = {1, 2, 3, 4};
+    // Set<int> set = Set(mySet);
+    // Set<int> newSet = set.map(cube).map([](int x)
+    //                                     { return x * 2; });
 
-    newSet.toString(" ");
-    newSet.filter([](const int &element)
-                  { return element % 4 == 0; })
-        .toString(" ");
+    // newSet.toString(" ");
+    // newSet.filter([](const int &element)
+    //               { return element % 4 == 0; })
+    //     .toString(" ");
 
     return 0;
 }

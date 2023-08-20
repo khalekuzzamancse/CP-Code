@@ -1,30 +1,36 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
 using namespace std;
+
 int main()
 {
     int t;
     cin >> t;
     while (t--)
     {
-        string x;
-        cin >> x;
-
-        int n = x.size();
-        string s1(n, '(');
-        string s2(n, ')');
-        string s = s1 + s2;
-        if (n % 2 != 0)
+        int n;
+        cin >> n;
+        vector<long long> v;
+        for (int i = 0; i < n; i++)
         {
-            cout << "YES" << endl;
-            cout << s << endl;
+            long long x;
+            cin >> x;
+            if (x == 1)
+                x++;
+            v.push_back(x);
         }
-        else
+        for (int i = 0; i <= n - 2; i++)
         {
-            ;
+            if (v[i] == 1)
+                v[i]++;
+            if (v[i + 1] % v[i] == 0)
+                v[i + 1]++;
         }
+        for (int it : v)
+            cout << it << " ";
+        cout << endl;
     }
+
     return 0;
 }
