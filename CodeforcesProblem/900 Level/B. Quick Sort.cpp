@@ -1,3 +1,9 @@
+
+/*
+
+https://codeforces.com/problemset/problem/1768/B
+*/
+
 #include <iostream>
 #include <vector>
 #include <math.h>
