@@ -181,7 +181,7 @@ public:
             pos = std::distance(range.first, it.base()) - 1 + start;
         return pos;
     }
-    int findIf(std::function<bool(const T &)> predicate, int start = 0, int end = -1)
+    int findIf(std::function<bool(const T &)> predicate, int start = 0, int end = INVALID_INDEX)
     {
         auto range = getRange(start, end);
         auto it = std::find_if(range.first, range.second, predicate);
@@ -191,7 +191,7 @@ public:
             pos = std::distance(range.first, it) + start;
         return pos;
     }
-    int findIfReseverse(std::function<bool(const char &)> predicate, int start = 0, int end = -1)
+    int findIfReseverse(std::function<bool(const char &)> predicate, int start = 0, int end = INVALID_INDEX)
     {
         std::pair<typename std::string::iterator,
                   typename std::string::iterator>
@@ -215,12 +215,12 @@ public:
         return !doesExits(value);
     }
 
-    int count(const T &value, int start = 0, int end = -1)
+    int count(const T &value, int start = 0, int end =INVALID_INDEX)
     {
         auto range = getRange(start, end);
         return ::count(range.first, range.second, value);
     }
-    int countIf(std::function<bool(const T &)> predicate, int start = 0, int end = -1)
+    int countIf(std::function<bool(const T &)> predicate, int start = 0, int end =INVALID_INDEX)
     {
         auto range = getRange(start, end);
         return ::count_if(range.first, range.second, predicate);
@@ -538,5 +538,6 @@ int main()
 Uses example:
 Count,Does Exits,Does Not Exits:
     https://codeforces.com/problemset/problem/1806/B
+    https://codeforces.com/problemset/problem/1705/B
 
 */
