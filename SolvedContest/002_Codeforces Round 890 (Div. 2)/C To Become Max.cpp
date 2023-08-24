@@ -129,21 +129,21 @@ public:
 };
 class Solution
 {
-    Vector<int> v;
+    Vector<int> old;
     int n, k;
     int findMaxPos()
     {
         int pos = -1, mx = -1;
         for (int i = 0; i <= n - 2; i++)
         {
-            if (v[i] <= v[i + 1] && v[i] > mx)
-                mx = v[i], pos = i;
+            if (old[i] <= old[i + 1] && old[i] > mx)
+                mx = old[i], pos = i;
         }
         return pos;
     }
     int difference(int i)
     {
-        return v[i + 1] - v[i];
+        return old[i + 1] - old[i];
     }
     int incPossible(int diff, int k)
     {
@@ -159,14 +159,14 @@ public:
     {
 
         cin >> n >> k;
-        v = Vector<int>(n);
+        old = Vector<int>(n);
     }
     void solve()
     {
 
         while (k > 0)
         {
-            v.toString();
+            old.toString();
             int pos = findMaxPos();
             if (pos != -1)
             {
@@ -174,13 +174,13 @@ public:
                 int inc = incPossible(d, k);
 
                 cout << "d: " << d << " inc :" << inc << " k " << k << endl;
-                cout << v[pos] << " " << pos + 1 << endl;
-                v[pos] += inc;
+                cout << old[pos] << " " << pos + 1 << endl;
+                old[pos] += inc;
                 k = updatedK(k, inc);
             }
         }
-        v.toString();
-        cout << v.max().first << endl;
+        old.toString();
+        cout << old.max().first << endl;
     }
 };
 int main()

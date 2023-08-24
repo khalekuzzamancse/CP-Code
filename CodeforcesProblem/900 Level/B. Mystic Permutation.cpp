@@ -1,3 +1,6 @@
+/*
+https://codeforces.com/problemset/problem/1689/B
+*/
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -126,7 +129,7 @@ public:
     }
     void removeLast()
     {
-        if (isNotEmpty())
+        if (!_elements.empty())
             this->_elements.pop_back();
     }
     void removeAt(size_t position)
@@ -411,12 +414,6 @@ public:
                 throw std::out_of_range("Vector is empty");
         return _elements[size() - 1];
     }
-    void swap(size_t i, size_t j)
-    {
-        T tmp = _elements[i];
-        _elements[i] = _elements[j];
-        _elements[j] = tmp;
-    }
 
     void toString(string separator = " ")
     {
@@ -456,94 +453,68 @@ public:
         std::sort(result.begin(), result.end());
         return move(Vector<pair<T, int>>(result));
     }
+    void swap(size_t i, size_t j)
+    {
+        T tmp = _elements[i];
+        _elements[i] = _elements[j];
+        _elements[j] = tmp;
+    }
 };
-bool isZero(int value)
+
+class Solution
 {
-    return value == 0;
-}
+private:
+    Vector<int> old, sorted, ans;
+    int get(int i)
+    {
+
+        int p = sorted.getLast();
+        if (old[i] != p || sorted.size() == 1)
+            sorted.removeLast();
+        else
+        {
+            p = sorted[sorted.getLastIndex() - 1];
+            sorted.removeAt(sorted.getLastIndex() - 1);
+        }
+        return p;
+    }
+
+public:
+    Solution()
+    {
+        int n;
+        cin >> n;
+        old = Vector<int>(n);
+    }
+
+    void solve()
+    {
+        if (old.size() == 1)
+        {
+            cout << -1 << endl;
+            return;
+        }
+        sorted = old;
+        sorted.sort(0, -1, std::greater<int>());
+        Vector<int> ans;
+        for (int i = 0; i < old.size(); i++)
+            ans.pushBack(get(i));
+        if (old[old.size() - 1] == ans.getLast())
+            ans.swap(ans.getLastIndex() - 1, ans.getLastIndex());
+
+        ans.toString();
+    }
+};
 
 int main()
 {
-    int n;
-    cin >> n;
-    Vector<int> v = Vector<int>(n);
-    int cntZero = v.countIf(isZero);
-
-    cout << "cntZero: " << cntZero << endl;
-    //  Vector<int> a(n), b(n), ans(n, 0);
-
-    //  Vector<int> v;
-
-    // v.pushBack(1);
-    // v.pushBack(2);
-    // v.pushBack(3);
-    // v.pushFront(10);
-    // v.pushFront(20);
-    // v.insertAt(10, 4);
-    // v.pushBack(2);
-    // v.pushBack(9);
-    // v.toString();
-    // cout << v.secondMin().first << endl;
-
-    // v.forEachReverse([](size_t i, int value, bool &stop)
-    //                  { cout << i << ":" << value << endl; });
-    // v.forEach([](size_t i, int value, bool &stop)
-    //           { cout << i << ":" << value << endl; });
-
-    // v.removeFirst();
-    // v.removeLast();
-    // v.removeAt(2);
-    // v.remove(10);
-    //  v.remove(10, 0, 3);
-    //  v.removeIf([](int x)
-    //            { return x % 2 == 0; });
-    // v.removeIf([](int x)
-    //            { return x % 2 == 0; },
-    //            0, 2);
-
-    // v.removeDuplicate(1,5);
-    // v.toString();
-
-    // Vector<int> v2 = Vector<int>(v);
-    // v.toString();
-    // Vector<int> v3 = Vector<int>(3);
-    // v3.toString();
-
-    // cout << v.getFirst() << endl;
-    // cout << v.getLast() << endl;
-
-    // v.forEach([](size_t index, const int &value)
-    //           { std::cout << "Index: " << index << "Value: "
-    //                       << value << std::endl; });
-    //   v.forEachReverse([](size_t index, const int &value)
-    //           { std::cout << "Index: " << index << "Value: "
-    //                       << value << std::endl; });
-
-    // v.map([](const int &x)
-    //       { return x * x; })
-    //     .map([](const int &x)
-    //          { return x * 2; })
-    //     .map([](const int &x)
-    //          { return x * 3; }).toString();
-
-    // auto squaredVector = v.map(squre);
-
-    // Filter example
-    // v.filter([](size_t index, const int &x) -> bool
-    //          { return x % 2 == 0; })
-    //     .toString();
-    // v.filter([](size_t i, const int &x)
-    //          {
-    //                     bool b=i>0&&x%2==0;
-    //                     return b; })
-    //     .toString();
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        Solution solution = Solution();
+        solution.solve();
+    }
 
     return 0;
 }
-/*
-Uses example:
-Count,Does Exits,Does Not Exits:
-    https://codeforces.com/problemset/problem/1806/B
-    https://codeforces.com/problemset/problem/1705/B
-
-*/
